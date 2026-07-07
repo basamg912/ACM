@@ -3,4 +3,4 @@
 	url = https://github.com/basamg912/GMR.git
 [submodule "ASAP"]
 	path = ASAP
-	url = https://github.com/LeCAR-Lab/ASAP.git
+	url = https://github.com/basamg912/ASAP
