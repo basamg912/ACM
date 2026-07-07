@@ -19,12 +19,13 @@ services:
             - ACCEPT_EULA=Y
             - PRIVACY_CONSENT=Y
         volumes:
-            # /workspace 전체를 덮으면 이미지의 /workspace/isaaclab이 가려지므로 하위 디렉토리별로 마운트
             - ./ASAP:/workspace/ASAP
             - ./GMR:/workspace/GMR
             - ./motion:/workspace/motion
             - ./script:/workspace/script
             - ./test:/workspace/test
+            # 학습 로그/체크포인트가 호스트에 남도록
+            - ./logs:/workspace/logs
             - isaac-cache-kit:/isaac-sim/kit/cache
             - isaac-cache-ov:/home/hvlab/.cache/ov
             - isaac-cache-pip:/home/hvlab/.cache/pip
