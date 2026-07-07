@@ -1,6 +1,6 @@
-[submodule "HumanoidVerse"]
-	path = HumanoidVerse
-	url = https://github.com/LeCAR-Lab/HumanoidVerse.git
 [submodule "GMR"]
 	path = GMR
 	url = https://github.com/basamg912/GMR.git
+[submodule "ASAP"]
+	path = ASAP
+	url = https://github.com/LeCAR-Lab/ASAP.git
