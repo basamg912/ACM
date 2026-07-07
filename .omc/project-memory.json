@@ -1,0 +1,112 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1783384987990,
+  "projectRoot": "/home/kist/work/workspace/ASAP_isaaclab",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "test"
+    ],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "GMR": {
+      "path": "GMR",
+      "purpose": null,
+      "fileCount": 8,
+      "lastAccessed": 1783384987988,
+      "keyFiles": [
+        "CLAUDE.md",
+        "DOC.md",
+        "LICENSE",
+        "README.md",
+        "TEST_MOTIONS.md"
+      ]
+    },
+    "HumanoidVerse": {
+      "path": "HumanoidVerse",
+      "purpose": null,
+      "fileCount": 5,
+      "lastAccessed": 1783384987989,
+      "keyFiles": [
+        "LICENSE",
+        "README.md",
+        "pyproject.toml"
+      ]
+    },
+    "script": {
+      "path": "script",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1783384987989,
+      "keyFiles": [
+        "gmr_to_hv.py"
+      ]
+    },
+    "test": {
+      "path": "test",
+      "purpose": "Test files",
+      "fileCount": 1,
+      "lastAccessed": 1783384987989,
+      "keyFiles": [
+        "check_motion_data.py"
+      ]
+    },
+    "GMR/assets": {
+      "path": "GMR/assets",
+      "purpose": "Static assets",
+      "fileCount": 3,
+      "lastAccessed": 1783384987990,
+      "keyFiles": [
+        "GMR.png",
+        "GMR_pipeline.png",
+        "optitrack.png"
+      ]
+    },
+    "GMR/scripts": {
+      "path": "GMR/scripts",
+      "purpose": "Build/utility scripts",
+      "fileCount": 15,
+      "lastAccessed": 1783384987990,
+      "keyFiles": [
+        "batch_gmr_pkl_to_csv.py",
+        "bvh_to_robot.py",
+        "bvh_to_robot_dataset.py"
+      ]
+    },
+    "HumanoidVerse/assets": {
+      "path": "HumanoidVerse/assets",
+      "purpose": "Static assets",
+      "fileCount": 10,
+      "lastAccessed": 1783384987990,
+      "keyFiles": [
+        "genesis_genesis.gif",
+        "genesis_isaacgym.gif",
+        "genesis_test.gif"
+      ]
+    }
+  },
+  "hotPaths": [],
+  "userDirectives": []
+}

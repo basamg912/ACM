@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"grep -oE 'joint name=\\\"[^\\\"]*\\\"' assets/unitree_g1/g1_mocap_29dof.xml | grep -iE \\\"elbow|shoulder|wrist\\\" && /home/kist/anaconda3/envs/gmr/bin/python - <<'EOF'\\nimport mujoco, numpy as np\\...",
+  "error": "Exit code 1\nugrep: warning: assets/unitree_g1/g1_mocap_29dof.xml: No such file or directory",
+  "timestamp": "2026-07-06T05:58:37.078Z",
+  "retry_count": 1
+}
