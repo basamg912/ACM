@@ -2,7 +2,7 @@ python humanoidverse/train_agent.py \
 +simulator=isaacsim \
 +exp=locomotion \
 +domain_rand=domain_rand_base \
-+rewards=loco/reward_h1_locomotion \
++rewards=loco/reward_kapex_locomotion \
 +robot=kapex/kapex_31dof \
 +terrain=terrain_locomotion \
 +obs=loco/leggedloco_obs_history_wolinvel \
