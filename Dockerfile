@@ -1,13 +1,13 @@
 FROM nvcr.io/nvidia/isaac-lab:2.3.2
 
-ARG UID=1000009
-ARG GID=1000009
+ARG UID=1000
+ARG GID=1000
 ARG USERNAME=hvlab
 
 USER root
 
-RUN groupadd -g ${GID} ${USERNAME} && \
-    useradd -m -u ${UID} -g ${GID} -s /bin/bash ${USERNAME} && \
+RUN groupadd -f -g ${GID} ${USERNAME} && \
+    useradd -m -o -u ${UID} -g ${GID} -s /bin/bash ${USERNAME} && \
     chmod o+rx /isaac-sim && \
     chown ${UID}:${GID} /isaac-sim/kit/cache && \
     chown ${UID}:${GID} /workspace && \

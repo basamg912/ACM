@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1783384987990,
-  "projectRoot": "/home/kist/work/workspace/ASAP_isaaclab",
+  "lastScanned": 1783902489808,
+  "projectRoot": "/home/kist/work/workspace/ACM",
   "techStack": {
     "languages": [],
     "frameworks": [],
@@ -27,15 +27,29 @@
     "mainDirectories": [
       "test"
     ],
-    "gitBranches": null
+    "gitBranches": {
+      "defaultBranch": "master",
+      "branchingStrategy": null
+    }
   },
   "customNotes": [],
   "directoryMap": {
+    "ASAP": {
+      "path": "ASAP",
+      "purpose": null,
+      "fileCount": 5,
+      "lastAccessed": 1783902489806,
+      "keyFiles": [
+        "LICENSE",
+        "README.md",
+        "setup.py"
+      ]
+    },
     "GMR": {
       "path": "GMR",
       "purpose": null,
       "fileCount": 8,
-      "lastAccessed": 1783384987988,
+      "lastAccessed": 1783902489807,
       "keyFiles": [
         "CLAUDE.md",
         "DOC.md",
@@ -44,40 +58,59 @@
         "TEST_MOTIONS.md"
       ]
     },
-    "HumanoidVerse": {
-      "path": "HumanoidVerse",
+    "logs": {
+      "path": "logs",
       "purpose": null,
-      "fileCount": 5,
-      "lastAccessed": 1783384987989,
+      "fileCount": 0,
+      "lastAccessed": 1783902489807,
+      "keyFiles": []
+    },
+    "motionData": {
+      "path": "motionData",
+      "purpose": null,
+      "fileCount": 8,
+      "lastAccessed": 1783902489807,
       "keyFiles": [
-        "LICENSE",
-        "README.md",
-        "pyproject.toml"
+        "0-A1-_Stand_stageii.pkl",
+        "0-B15_-__Walk_turn_around_stageii.pkl",
+        "0-B4_-_Stand_to_Walk_backwards_stageii.pkl",
+        "0-B9_-__Walk_turn_left_90_stageii.pkl",
+        "0-FilteredB13_-__Walk_turn_right_90_stageii.pkl"
       ]
     },
     "script": {
       "path": "script",
       "purpose": null,
-      "fileCount": 1,
-      "lastAccessed": 1783384987989,
+      "fileCount": 4,
+      "lastAccessed": 1783902489807,
       "keyFiles": [
-        "gmr_to_hv.py"
+        "gmr_to_hv.py",
+        "locomotion.md",
+        "setup_python.sh",
+        "train_agent.sh"
       ]
     },
     "test": {
       "path": "test",
       "purpose": "Test files",
       "fileCount": 1,
-      "lastAccessed": 1783384987989,
+      "lastAccessed": 1783902489807,
       "keyFiles": [
         "check_motion_data.py"
       ]
+    },
+    "ASAP/scripts": {
+      "path": "ASAP/scripts",
+      "purpose": "Build/utility scripts",
+      "fileCount": 0,
+      "lastAccessed": 1783902489808,
+      "keyFiles": []
     },
     "GMR/assets": {
       "path": "GMR/assets",
       "purpose": "Static assets",
       "fileCount": 3,
-      "lastAccessed": 1783384987990,
+      "lastAccessed": 1783902489808,
       "keyFiles": [
         "GMR.png",
         "GMR_pipeline.png",
@@ -88,25 +121,27 @@
       "path": "GMR/scripts",
       "purpose": "Build/utility scripts",
       "fileCount": 15,
-      "lastAccessed": 1783384987990,
+      "lastAccessed": 1783902489808,
       "keyFiles": [
         "batch_gmr_pkl_to_csv.py",
         "bvh_to_robot.py",
         "bvh_to_robot_dataset.py"
       ]
-    },
-    "HumanoidVerse/assets": {
-      "path": "HumanoidVerse/assets",
-      "purpose": "Static assets",
-      "fileCount": 10,
-      "lastAccessed": 1783384987990,
-      "keyFiles": [
-        "genesis_genesis.gif",
-        "genesis_isaacgym.gif",
-        "genesis_test.gif"
-      ]
     }
   },
-  "hotPaths": [],
+  "hotPaths": [
+    {
+      "path": "ASAP/humanoidverse/agents/ppo/ppo.py",
+      "accessCount": 1,
+      "lastAccessed": 1783902764636,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/deploy_agent.py",
+      "accessCount": 1,
+      "lastAccessed": 1783902795954,
+      "type": "file"
+    }
+  ],
   "userDirectives": []
 }

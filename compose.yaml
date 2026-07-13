@@ -21,7 +21,7 @@ services:
         volumes:
             - ./ASAP:/workspace/ASAP
             - ./GMR:/workspace/GMR
-            - ./motion:/workspace/motion
+            - ./motionData:/workspace/motionData
             - ./script:/workspace/script
             - ./test:/workspace/test
             # 학습 로그/체크포인트가 호스트에 남도록

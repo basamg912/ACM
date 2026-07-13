@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"grep -oE 'joint name=\\\"[^\\\"]*\\\"' assets/unitree_g1/g1_mocap_29dof.xml | grep -iE \\\"elbow|shoulder|wrist\\\" && /home/kist/anaconda3/envs/gmr/bin/python - <<'EOF'\\nimport mujoco, numpy as np\\...",
-  "error": "Exit code 1\nugrep: warning: assets/unitree_g1/g1_mocap_29dof.xml: No such file or directory",
-  "timestamp": "2026-07-06T05:58:37.078Z",
+  "tool_input_preview": "{\"command\":\"python -m py_compile /home/kist/work/workspace/ACM/ASAP/humanoidverse/deploy_agent.py && echo OK\",\"description\":\"Syntax-check deploy_agent.py\"}",
+  "error": "Exit code 127\n/bin/bash: line 1: python: command not found",
+  "timestamp": "2026-07-13T00:33:22.947Z",
   "retry_count": 1
 }
