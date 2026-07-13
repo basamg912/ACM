@@ -131,6 +131,12 @@
   },
   "hotPaths": [
     {
+      "path": "GMR/scripts/smplx_to_robot.py",
+      "accessCount": 3,
+      "lastAccessed": 1783918732923,
+      "type": "file"
+    },
+    {
       "path": "ASAP/humanoidverse/agents/ppo/ppo.py",
       "accessCount": 1,
       "lastAccessed": 1783902764636,
@@ -140,6 +146,18 @@
       "path": "ASAP/humanoidverse/deploy_agent.py",
       "accessCount": 1,
       "lastAccessed": 1783902795954,
+      "type": "file"
+    },
+    {
+      "path": "GMR/general_motion_retargeting/robot_motion_viewer.py",
+      "accessCount": 1,
+      "lastAccessed": 1783918689897,
+      "type": "file"
+    },
+    {
+      "path": "GMR/general_motion_retargeting/ik_configs/smplx_to_kapex.json",
+      "accessCount": 1,
+      "lastAccessed": 1783921283682,
       "type": "file"
     }
   ],

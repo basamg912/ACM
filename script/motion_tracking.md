@@ -1,0 +1,19 @@
+python humanoidverse/train_agent.py \
++simulator=isaacsim \
++exp=motion_tracking \
++domain_rand=NO_domain_rand \
++rewards=motion_tracking/reward_motion_tracking_dm_2real \
++robot=kapex/kapex_31dof \
++terrain=terrain_locomotion_plane \
++obs=motion_tracking/deepmimic_a2c_nolinvel_LARGEnoise_history \
+num_envs=4096 \
+project_name=MotionTracking \
+experiment_name=MotionTracking_Kapex_walking \
+rewards.reward_penalty_curriculum=True \
+rewards.reward_penalty_degree=0.00001 \
+env.config.resample_motion_when_training=False \
+env.config.termination.terminate_when_motion_far=True \
+env.config.termination_curriculum.terminate_when_motion_far_curriculum=True \
+env.config.termination_curriculum.terminate_when_motion_far_threshold_min=0.3 \
+env.config.termination_curriculum.terminate_when_motion_far_curriculum_degree=0.000025 \
+robot.asset.self_collisions=0
