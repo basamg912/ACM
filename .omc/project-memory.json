@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1783902489808,
+  "lastScanned": 1783993696693,
   "projectRoot": "/home/kist/work/workspace/ACM",
   "techStack": {
     "languages": [],
@@ -38,7 +38,7 @@
       "path": "ASAP",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1783902489806,
+      "lastAccessed": 1783993696690,
       "keyFiles": [
         "LICENSE",
         "README.md",
@@ -49,7 +49,7 @@
       "path": "GMR",
       "purpose": null,
       "fileCount": 8,
-      "lastAccessed": 1783902489807,
+      "lastAccessed": 1783993696692,
       "keyFiles": [
         "CLAUDE.md",
         "DOC.md",
@@ -62,74 +62,70 @@
       "path": "logs",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1783902489807,
+      "lastAccessed": 1783993696692,
       "keyFiles": []
     },
     "motionData": {
       "path": "motionData",
       "purpose": null,
-      "fileCount": 8,
-      "lastAccessed": 1783902489807,
+      "fileCount": 20,
+      "lastAccessed": 1783993696692,
       "keyFiles": [
-        "0-A1-_Stand_stageii.pkl",
-        "0-B15_-__Walk_turn_around_stageii.pkl",
-        "0-B4_-_Stand_to_Walk_backwards_stageii.pkl",
-        "0-B9_-__Walk_turn_left_90_stageii.pkl",
-        "0-FilteredB13_-__Walk_turn_right_90_stageii.pkl"
+        "0-07_01_stageii.pkl",
+        "0-07_02_stageii.pkl",
+        "0-07_03_stageii.pkl",
+        "0-07_04_stageii.pkl",
+        "0-07_05_stageii.pkl"
       ]
     },
     "script": {
       "path": "script",
       "purpose": null,
-      "fileCount": 4,
-      "lastAccessed": 1783902489807,
+      "fileCount": 5,
+      "lastAccessed": 1783993696692,
       "keyFiles": [
-        "gmr_to_hv.py",
         "locomotion.md",
+        "motion_tracking.md",
         "setup_python.sh",
-        "train_agent.sh"
+        "train_agent.sh",
+        "train_jobs.nomad"
       ]
     },
     "test": {
       "path": "test",
       "purpose": "Test files",
       "fileCount": 1,
-      "lastAccessed": 1783902489807,
+      "lastAccessed": 1783993696692,
       "keyFiles": [
         "check_motion_data.py"
       ]
-    },
-    "ASAP/scripts": {
-      "path": "ASAP/scripts",
-      "purpose": "Build/utility scripts",
-      "fileCount": 0,
-      "lastAccessed": 1783902489808,
-      "keyFiles": []
     },
     "GMR/assets": {
       "path": "GMR/assets",
       "purpose": "Static assets",
       "fileCount": 3,
-      "lastAccessed": 1783902489808,
+      "lastAccessed": 1783993696692,
       "keyFiles": [
         "GMR.png",
         "GMR_pipeline.png",
         "optitrack.png"
       ]
     },
-    "GMR/scripts": {
-      "path": "GMR/scripts",
-      "purpose": "Build/utility scripts",
-      "fileCount": 15,
-      "lastAccessed": 1783902489808,
-      "keyFiles": [
-        "batch_gmr_pkl_to_csv.py",
-        "bvh_to_robot.py",
-        "bvh_to_robot_dataset.py"
-      ]
+    "GMR/build": {
+      "path": "GMR/build",
+      "purpose": "Build output",
+      "fileCount": 0,
+      "lastAccessed": 1783993696693,
+      "keyFiles": []
     }
   },
   "hotPaths": [
+    {
+      "path": "ASAP/humanoidverse/deploy_agent.py",
+      "accessCount": 8,
+      "lastAccessed": 1783997088443,
+      "type": "file"
+    },
     {
       "path": "GMR/scripts/smplx_to_robot.py",
       "accessCount": 3,
@@ -137,15 +133,21 @@
       "type": "file"
     },
     {
-      "path": "ASAP/humanoidverse/agents/ppo/ppo.py",
-      "accessCount": 1,
-      "lastAccessed": 1783902764636,
+      "path": "ASAP/humanoidverse/simulator/isaacsim/isaacsim.py",
+      "accessCount": 2,
+      "lastAccessed": 1783991653616,
       "type": "file"
     },
     {
-      "path": "ASAP/humanoidverse/deploy_agent.py",
+      "path": "ASAP/humanoidverse/envs/motion_tracking/motion_tracking.py",
+      "accessCount": 2,
+      "lastAccessed": 1783997020580,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/agents/ppo/ppo.py",
       "accessCount": 1,
-      "lastAccessed": 1783902795954,
+      "lastAccessed": 1783902764636,
       "type": "file"
     },
     {
@@ -158,6 +160,12 @@
       "path": "GMR/general_motion_retargeting/ik_configs/smplx_to_kapex.json",
       "accessCount": 1,
       "lastAccessed": 1783921283682,
+      "type": "file"
+    },
+    {
+      "path": "script/train_jobs.nomad",
+      "accessCount": 1,
+      "lastAccessed": 1783993708544,
       "type": "file"
     }
   ],
