@@ -14,7 +14,7 @@ variable "acm_root" {
 
 job "kapex-train" {
   datacenters = ["dc1"]
-  node_pool   = "dgx-spark"
+  node_pool   = "rtx-gpu" # dgx-spark
   type        = "batch"
 
   // DGX Spark는 노드당 GPU 1장(GB10)이므로 두 그룹을 서로 다른 노드에 배치
@@ -87,7 +87,7 @@ job "kapex-train" {
 
       resources {
         cpu    = 8000  # MHz
-        memory = 65536 # MB
+        memory = 16000 # MB
       }
     }
   }
@@ -163,7 +163,7 @@ job "kapex-train" {
 
       resources {
         cpu    = 8000
-        memory = 65536
+        memory = 16000
       }
     }
   }
