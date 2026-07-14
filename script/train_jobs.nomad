@@ -1,6 +1,7 @@
 // Nomad job: locomotion + motion tracking 학습을 동시에 실행
 // 사용법:
 //   nomad job run script/train_jobs.nomad
+//   nomad job run -var node_pool=rtx-gpu -var image=161.122.114.87:5000/hvlab:v0-amd64 script/train_jobs.nomad
 // 전제:
 //   - 이미지 hvlab:v0 가 노드에 빌드되어 있음 (docker compose build)
 //   - Nomad docker 드라이버에서 volumes 허용 필요 (client 설정):
@@ -12,9 +13,21 @@ variable "acm_root" {
   default = "/home/sybae/work/ACM"
 }
 
+// 노드 아키텍처에 맞는 이미지를 골라야 함:
+//   dgx-spark(ARM64) → hvlab:v0,  rtx-gpu(x86_64) → hvlab:v0-amd64
+variable "image" {
+  type    = string
+  default = "161.122.114.87:5000/hvlab:v0"
+}
+
+variable "node_pool" {
+  type    = string
+  default = "dgx-spark"
+}
+
 job "kapex-train" {
   datacenters = ["dc1"]
-  node_pool   = "rtx-gpu" # dgx-spark
+  node_pool   = var.node_pool
   type        = "batch"
 
   // DGX Spark는 노드당 GPU 1장(GB10)이므로 두 그룹을 서로 다른 노드에 배치
@@ -40,7 +53,7 @@ job "kapex-train" {
       user   = "root"
 
       config {
-        image        = "161.122.114.87:5000/hvlab:v0"
+        image        = var.image
         runtime      = "nvidia"
         network_mode = "host"
         work_dir     = "/workspace/ASAP"
@@ -109,7 +122,7 @@ job "kapex-train" {
       user   = "root"
 
       config {
-        image        = "161.122.114.87:5000/hvlab:v0"
+        image        = var.image
         runtime      = "nvidia"
         network_mode = "host"
         work_dir     = "/workspace/ASAP"
