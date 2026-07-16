@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1783993696693,
+  "lastScanned": 1784161318771,
   "projectRoot": "/home/kist/work/workspace/ACM",
   "techStack": {
     "languages": [],
@@ -38,7 +38,7 @@
       "path": "ASAP",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1783993696690,
+      "lastAccessed": 1784161318769,
       "keyFiles": [
         "LICENSE",
         "README.md",
@@ -49,7 +49,7 @@
       "path": "GMR",
       "purpose": null,
       "fileCount": 8,
-      "lastAccessed": 1783993696692,
+      "lastAccessed": 1784161318770,
       "keyFiles": [
         "CLAUDE.md",
         "DOC.md",
@@ -62,14 +62,14 @@
       "path": "logs",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1783993696692,
+      "lastAccessed": 1784161318771,
       "keyFiles": []
     },
     "motionData": {
       "path": "motionData",
       "purpose": null,
       "fileCount": 20,
-      "lastAccessed": 1783993696692,
+      "lastAccessed": 1784161318771,
       "keyFiles": [
         "0-07_01_stageii.pkl",
         "0-07_02_stageii.pkl",
@@ -81,21 +81,21 @@
     "script": {
       "path": "script",
       "purpose": null,
-      "fileCount": 5,
-      "lastAccessed": 1783993696692,
+      "fileCount": 7,
+      "lastAccessed": 1784161318771,
       "keyFiles": [
+        "finetune.md",
         "locomotion.md",
         "motion_tracking.md",
         "setup_python.sh",
-        "train_agent.sh",
-        "train_jobs.nomad"
+        "train_agent.sh"
       ]
     },
     "test": {
       "path": "test",
       "purpose": "Test files",
       "fileCount": 1,
-      "lastAccessed": 1783993696692,
+      "lastAccessed": 1784161318771,
       "keyFiles": [
         "check_motion_data.py"
       ]
@@ -104,7 +104,7 @@
       "path": "GMR/assets",
       "purpose": "Static assets",
       "fileCount": 3,
-      "lastAccessed": 1783993696692,
+      "lastAccessed": 1784161318771,
       "keyFiles": [
         "GMR.png",
         "GMR_pipeline.png",
@@ -115,7 +115,7 @@
       "path": "GMR/build",
       "purpose": "Build output",
       "fileCount": 0,
-      "lastAccessed": 1783993696693,
+      "lastAccessed": 1784161318771,
       "keyFiles": []
     }
   },
@@ -133,6 +133,12 @@
       "type": "file"
     },
     {
+      "path": "ASAP/humanoidverse/agents/ppo/ppo.py",
+      "accessCount": 3,
+      "lastAccessed": 1784082726295,
+      "type": "file"
+    },
+    {
       "path": "ASAP/humanoidverse/simulator/isaacsim/isaacsim.py",
       "accessCount": 2,
       "lastAccessed": 1783991653616,
@@ -142,12 +148,6 @@
       "path": "ASAP/humanoidverse/envs/motion_tracking/motion_tracking.py",
       "accessCount": 2,
       "lastAccessed": 1783997020580,
-      "type": "file"
-    },
-    {
-      "path": "ASAP/humanoidverse/agents/ppo/ppo.py",
-      "accessCount": 1,
-      "lastAccessed": 1783902764636,
       "type": "file"
     },
     {
@@ -166,6 +166,18 @@
       "path": "script/train_jobs.nomad",
       "accessCount": 1,
       "lastAccessed": 1783993708544,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/eval_agent.py",
+      "accessCount": 1,
+      "lastAccessed": 1784018525918,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/envs/locomotion/locomotion.py",
+      "accessCount": 1,
+      "lastAccessed": 1784082736140,
       "type": "file"
     }
   ],
