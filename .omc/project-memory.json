@@ -122,8 +122,20 @@
   "hotPaths": [
     {
       "path": "ASAP/humanoidverse/deploy_agent.py",
-      "accessCount": 8,
-      "lastAccessed": 1783997088443,
+      "accessCount": 9,
+      "lastAccessed": 1784164737285,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/simulator/mujoco/mujoco.py",
+      "accessCount": 7,
+      "lastAccessed": 1784182907027,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/envs/motion_tracking/motion_tracking.py",
+      "accessCount": 6,
+      "lastAccessed": 1784164233287,
       "type": "file"
     },
     {
@@ -145,9 +157,9 @@
       "type": "file"
     },
     {
-      "path": "ASAP/humanoidverse/envs/motion_tracking/motion_tracking.py",
+      "path": "ASAP/humanoidverse/config/simulator/mujoco.yaml",
       "accessCount": 2,
-      "lastAccessed": 1783997020580,
+      "lastAccessed": 1784182935781,
       "type": "file"
     },
     {
@@ -178,6 +190,30 @@
       "path": "ASAP/humanoidverse/envs/locomotion/locomotion.py",
       "accessCount": 1,
       "lastAccessed": 1784082736140,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/simulator/genesis/genesis.py",
+      "accessCount": 1,
+      "lastAccessed": 1784163769150,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/data/robots/kapex/kapex_play.xml",
+      "accessCount": 1,
+      "lastAccessed": 1784163930608,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/simulator/mujoco/__init__.py",
+      "accessCount": 1,
+      "lastAccessed": 1784164029367,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/config/robot/kapex/kapex_31dof.yaml",
+      "accessCount": 1,
+      "lastAccessed": 1784164149981,
       "type": "file"
     }
   ],
