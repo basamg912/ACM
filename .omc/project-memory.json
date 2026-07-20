@@ -139,6 +139,12 @@
       "type": "file"
     },
     {
+      "path": "ASAP/humanoidverse/config/rewards/loco/reward_kapex_locomotion.yaml",
+      "accessCount": 5,
+      "lastAccessed": 1784509954305,
+      "type": "file"
+    },
+    {
       "path": "GMR/scripts/smplx_to_robot.py",
       "accessCount": 3,
       "lastAccessed": 1783918732923,
@@ -163,6 +169,12 @@
       "type": "file"
     },
     {
+      "path": "ASAP/humanoidverse/envs/locomotion/locomotion.py",
+      "accessCount": 2,
+      "lastAccessed": 1784509911892,
+      "type": "file"
+    },
+    {
       "path": "GMR/general_motion_retargeting/robot_motion_viewer.py",
       "accessCount": 1,
       "lastAccessed": 1783918689897,
@@ -184,12 +196,6 @@
       "path": "ASAP/humanoidverse/eval_agent.py",
       "accessCount": 1,
       "lastAccessed": 1784018525918,
-      "type": "file"
-    },
-    {
-      "path": "ASAP/humanoidverse/envs/locomotion/locomotion.py",
-      "accessCount": 1,
-      "lastAccessed": 1784082736140,
       "type": "file"
     },
     {
