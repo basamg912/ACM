@@ -15,12 +15,20 @@ variable "image" {
   type    = string
   default = "161.122.114.87:5000/hvlab:v0"
 }
-
+variable "user" {
+  type        = string
+  default     = ""
+  description = "LDAP uid — NOMAD_VAR_user=$USER 로 export 하거나 -var=user=... 로 전달"
+  validation {
+    condition     = var.user != ""
+    error_message = "Variable 'user' is required. Run: export NOMAD_VAR_user=$USER (or pass -var=user=<id>)."
+  }
+}
 job "kapex-mt-batch" {
   datacenters = ["dc1"]
   node_pool   = "dgx-spark"
   type        = "batch"
-
+  namespace = var.user
   parameterized {
     meta_required = ["motion"] // 확장자(.pkl) 제외한 모션 파일 이름
   }
