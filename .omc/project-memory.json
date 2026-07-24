@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1784161318771,
+  "lastScanned": 1784870671850,
   "projectRoot": "/home/kist/work/workspace/ACM",
   "techStack": {
     "languages": [],
@@ -10,7 +10,7 @@
   },
   "build": {
     "buildCommand": null,
-    "testCommand": null,
+    "testCommand": "SK=/home/kist/.claude/plugins/cache/claude-plugins-official/superpowers/6.1.1/skills/subagent-driven-development\necho \"--- scripts ---\"; ls -la \"$SK/scripts\" 2>/dev/null\necho \"--- existing ledger? ---\"; cat \"$(git -C /home/kist/work/workspace/ACM/ASAP rev-parse --show-toplevel)/.superpowers/sdd/progress.md\" 2>/dev/null || echo \"(no ledger yet)\"\necho \"--- branch ---\"; git -C /home/kist/work/workspace/ACM/ASAP branch --show-current\necho \"--- pytest available in hvgym? ---\"; /home/kist/anaconda3/envs/hvgym/bin/python -c \"import pytest; print('pytest', pytest.__version__)\" 2>&1 | tail -1",
     "lintCommand": null,
     "devCommand": null,
     "scripts": {}
@@ -37,10 +37,11 @@
     "ASAP": {
       "path": "ASAP",
       "purpose": null,
-      "fileCount": 5,
-      "lastAccessed": 1784161318769,
+      "fileCount": 6,
+      "lastAccessed": 1784870671848,
       "keyFiles": [
         "LICENSE",
+        "MUJOCO_LOG.TXT",
         "README.md",
         "setup.py"
       ]
@@ -49,7 +50,7 @@
       "path": "GMR",
       "purpose": null,
       "fileCount": 8,
-      "lastAccessed": 1784161318770,
+      "lastAccessed": 1784870671848,
       "keyFiles": [
         "CLAUDE.md",
         "DOC.md",
@@ -62,14 +63,14 @@
       "path": "logs",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1784161318771,
+      "lastAccessed": 1784870671849,
       "keyFiles": []
     },
     "motionData": {
       "path": "motionData",
       "purpose": null,
       "fileCount": 20,
-      "lastAccessed": 1784161318771,
+      "lastAccessed": 1784870671849,
       "keyFiles": [
         "0-07_01_stageii.pkl",
         "0-07_02_stageii.pkl",
@@ -81,30 +82,37 @@
     "script": {
       "path": "script",
       "purpose": null,
-      "fileCount": 7,
-      "lastAccessed": 1784161318771,
+      "fileCount": 10,
+      "lastAccessed": 1784870671849,
       "keyFiles": [
+        "dispatch_motions.sh",
         "finetune.md",
         "locomotion.md",
         "motion_tracking.md",
-        "setup_python.sh",
-        "train_agent.sh"
+        "motion_tracking_batch.nomad"
       ]
     },
     "test": {
       "path": "test",
       "purpose": "Test files",
       "fileCount": 1,
-      "lastAccessed": 1784161318771,
+      "lastAccessed": 1784870671849,
       "keyFiles": [
         "check_motion_data.py"
       ]
+    },
+    "ASAP/docs": {
+      "path": "ASAP/docs",
+      "purpose": "Documentation",
+      "fileCount": 0,
+      "lastAccessed": 1784870671849,
+      "keyFiles": []
     },
     "GMR/assets": {
       "path": "GMR/assets",
       "purpose": "Static assets",
       "fileCount": 3,
-      "lastAccessed": 1784161318771,
+      "lastAccessed": 1784870671849,
       "keyFiles": [
         "GMR.png",
         "GMR_pipeline.png",
@@ -115,11 +123,17 @@
       "path": "GMR/build",
       "purpose": "Build output",
       "fileCount": 0,
-      "lastAccessed": 1784161318771,
+      "lastAccessed": 1784870671849,
       "keyFiles": []
     }
   },
   "hotPaths": [
+    {
+      "path": "ASAP/humanoidverse/agents/ppo/ppo.py",
+      "accessCount": 10,
+      "lastAccessed": 1784870538444,
+      "type": "file"
+    },
     {
       "path": "ASAP/humanoidverse/deploy_agent.py",
       "accessCount": 9,
@@ -130,6 +144,12 @@
       "path": "ASAP/humanoidverse/simulator/mujoco/mujoco.py",
       "accessCount": 7,
       "lastAccessed": 1784182907027,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/envs/legged_base_task/legged_robot_base.py",
+      "accessCount": 7,
+      "lastAccessed": 1784792149629,
       "type": "file"
     },
     {
@@ -145,15 +165,15 @@
       "type": "file"
     },
     {
-      "path": "GMR/scripts/smplx_to_robot.py",
-      "accessCount": 3,
-      "lastAccessed": 1783918732923,
+      "path": "ASAP/humanoidverse/envs/locomotion/locomotion.py",
+      "accessCount": 5,
+      "lastAccessed": 1784866497597,
       "type": "file"
     },
     {
-      "path": "ASAP/humanoidverse/agents/ppo/ppo.py",
+      "path": "GMR/scripts/smplx_to_robot.py",
       "accessCount": 3,
-      "lastAccessed": 1784082726295,
+      "lastAccessed": 1783918732923,
       "type": "file"
     },
     {
@@ -169,9 +189,15 @@
       "type": "file"
     },
     {
-      "path": "ASAP/humanoidverse/envs/locomotion/locomotion.py",
+      "path": "ASAP/humanoidverse/agents/modules/ppo_modules.py",
       "accessCount": 2,
-      "lastAccessed": 1784509911892,
+      "lastAccessed": 1784869044493,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/agents/modules/modules.py",
+      "accessCount": 2,
+      "lastAccessed": 1784870537771,
       "type": "file"
     },
     {
@@ -220,6 +246,36 @@
       "path": "ASAP/humanoidverse/config/robot/kapex/kapex_31dof.yaml",
       "accessCount": 1,
       "lastAccessed": 1784164149981,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/config/algo/ppo.yaml",
+      "accessCount": 1,
+      "lastAccessed": 1784778479158,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/config/rewards/loco/reward_g1_locomotion.yaml",
+      "accessCount": 1,
+      "lastAccessed": 1784778480491,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/config/algo/ppo_train_delta_a.yaml",
+      "accessCount": 1,
+      "lastAccessed": 1784778494374,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/README.md",
+      "accessCount": 1,
+      "lastAccessed": 1784778514790,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/config/robot/g1/g1_29dof_anneal_23dof.yaml",
+      "accessCount": 1,
+      "lastAccessed": 1784778558785,
       "type": "file"
     }
   ],
