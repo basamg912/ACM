@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"d=/home/kist/work/workspace/ACM/ASAP/logs/G1_reward/20260729_163222-G123dof_loco-locomotion-g1_29dof_anneal_23dof; ls \\\"$d\\\" | grep -v model_ | head; f=$(ls \\\"$d\\\"/*.log 2>/dev/null | head...",
+  "error": "Exit code 1\nconfig.yaml\nevents.out.tfevents.1785310351.kist.2067383.0",
+  "timestamp": "2026-07-29T08:16:55.009Z",
+  "retry_count": 1
+}
