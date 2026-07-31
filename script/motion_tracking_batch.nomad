@@ -3,7 +3,7 @@
 // 실행:   nomad job dispatch -meta motion=0-07_01_stageii kapex-mt-batch
 //        (일괄 실행은 script/dispatch_motions.sh 참고)
 //
-// 노드당 GPU 1장이므로 memory 예약(90GB)으로 노드당 학습 1개만 뜨게 함.
+// 노드당 GPU 1장이므로 static port(gpu_lock) 예약으로 노드당 학습 1개만 뜨게 함.
 // 남는 dispatch 는 자동으로 대기했다가 자리가 나면 실행됨.
 
 variable "acm_root" {
@@ -36,6 +36,16 @@ job "kapex-mt-batch" {
   group "train" {
     count = 1
 
+    // "GPU 잠금" 용 static port: 같은 포트는 노드당 하나만 예약 가능하므로
+    // 이 job 의 dispatch 들끼리는 노드당 1개만 배치됨.
+    // (distinct_hosts 는 dispatch 된 자식 job 간에는 적용되지 않아 사용 불가.
+    //  이 포트를 쓰지 않는 다른 사용자의 job 은 같은 노드에 들어올 수 있음.)
+    network {
+      port "gpu_lock" {
+        static = 28877
+      }
+    }
+
     restart {
       attempts = 0
       mode     = "fail"
@@ -53,6 +63,8 @@ job "kapex-mt-batch" {
 
       config {
         image        = var.image
+        // 이미지가 커서(23GB) 첫 pull 시 기본 5분 제한을 초과할 수 있음
+        image_pull_timeout = "30m"
         runtime      = "nvidia"
         network_mode = "host"
         work_dir     = "/workspace/ASAP"
@@ -80,6 +92,7 @@ job "kapex-mt-batch" {
           "env.config.termination_curriculum.terminate_when_motion_far_threshold_min=0.3",
           "env.config.termination_curriculum.terminate_when_motion_far_curriculum_degree=0.000025",
           "robot.asset.self_collisions=0",
+          "algo.config.num_learning_iterations=100000",
         ]
 
         volumes = [
@@ -107,7 +120,9 @@ job "kapex-mt-batch" {
 
       resources {
         cpu    = 8000
-        memory = 110000 # 노드당 학습 1개만 배치되도록 크게 예약 (다른 학습 job과의 동거도 차단)
+        // docker driver 는 이 값을 컨테이너 memory hard limit 으로도 사용하므로
+        // 실제 사용량보다 여유있게. 노드당 1개 강제는 위 gpu_lock 포트가 담당.
+        memory = 30000
       }
     }
   }

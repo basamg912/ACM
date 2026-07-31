@@ -83,6 +83,7 @@ job "g1-hist-ablation" {
 
       config {
         image        = var.image
+	image_pull_timeout = "30m"
         runtime      = "nvidia"
         network_mode = "host"
         work_dir     = "/workspace/ASAP"
@@ -154,6 +155,7 @@ job "g1-hist-ablation" {
 
       config {
         image        = var.image
+	image_pull_timeout = "30m"
         runtime      = "nvidia"
         network_mode = "host"
         work_dir     = "/workspace/ASAP"
@@ -224,6 +226,7 @@ job "g1-hist-ablation" {
 
       config {
         image        = var.image
+	image_pull_timeout = "30m"
         runtime      = "nvidia"
         network_mode = "host"
         work_dir     = "/workspace/ASAP"
@@ -294,6 +297,7 @@ job "g1-hist-ablation" {
 
       config {
         image        = var.image
+	image_pull_timeout = "30m"
         runtime      = "nvidia"
         network_mode = "host"
         work_dir     = "/workspace/ASAP"
