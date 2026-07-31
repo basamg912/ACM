@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"d=/home/kist/work/workspace/ACM/ASAP/logs/G1_reward/20260729_163222-G123dof_loco-locomotion-g1_29dof_anneal_23dof; ls \\\"$d\\\" | grep -v model_ | head; f=$(ls \\\"$d\\\"/*.log 2>/dev/null | head...",
-  "error": "Exit code 1\nconfig.yaml\nevents.out.tfevents.1785310351.kist.2067383.0",
-  "timestamp": "2026-07-29T08:16:55.009Z",
+  "tool_input_preview": "{\"command\":\"cd /home/kist/work/workspace/ACM/ASAP && PYTHONPATH=/home/kist/work/workspace/ACM/ASAP /home/kist/anaconda3/envs/hvgym/bin/python - <<'EOF'\\nimport math, torch\\nfrom omegaconf import Omega...",
+  "error": "Exit code 1\n[1] InfoNCE: aligned=0.039 << random=6.748 (log B=4.159)\nTraceback (most recent call last):\n  File \"<stdin>\", line 15, in <module>\nAssertionError",
+  "timestamp": "2026-07-31T03:04:42.706Z",
   "retry_count": 1
 }
