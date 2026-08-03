@@ -28,6 +28,7 @@ experiment_name=hist_v3 \
 headless=True
 
 # 주요 knob
+#   encoder_config.channel_hidden_dims=[64] — channel/feature mixing hidden 분리 (v2 와 동일)
 #   contrastive_coef=0.5 contrastive_temperature=0.1 contrastive_batch_size=1024
 #   projection_config.proj_dim=16 hidden_dims=[32]
 #   latent_coef_warmup_iters=500 (contrastive 에도 동일 warmup 적용)

@@ -26,6 +26,8 @@ experiment_name=hist_v2 \
 headless=True
 
 # 주요 knob (config/algo/ppo_hist_v2.yaml)
+#   encoder_config.hidden_dims=[256,128] (feature mixing) / channel_hidden_dims=[64] (channel mixing)
+#     — 분리 지정. channel(시계열 5차원) 쪽이 행 75회 반복되는 연산 병목 (2.9M→0.36M MAC)
 #   vel_coef=1.0 latent_coef=0.5 latent_coef_warmup_iters=500 (초기 teacher latent 노이즈 회피)
 #   recon_coef=1.0 vae_beta=0.01 vae_free_bits=0.1 (teacher)
 #   detach_encoder_for_policy=True (False 로 두면 v1 처럼 joint gradient 비교 실험 가능)
