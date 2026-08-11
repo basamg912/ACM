@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd /home/kist/work/workspace/ACM/ASAP && PYTHONPATH=/home/kist/work/workspace/ACM/ASAP /home/kist/anaconda3/envs/hvgym/bin/python - <<'EOF'\\nimport math, torch\\nfrom omegaconf import Omega...",
-  "error": "Exit code 1\n[1] InfoNCE: aligned=0.039 << random=6.748 (log B=4.159)\nTraceback (most recent call last):\n  File \"<stdin>\", line 15, in <module>\nAssertionError",
-  "timestamp": "2026-07-31T03:04:42.706Z",
+  "tool_input_preview": "{\"command\":\"cd /tmp && python - <<'EOF'\\nimport re\\np = '/tmp/smoke_hist_v4.py'\\ns = open(p).read()\\ns = s.replace('for mode in (\\\"frozen\\\", \\\"vicreg\\\"):', 'for mode in (\\\"frozen\\\", \\\"vicreg\\\", \\\"crit...",
+  "error": "Exit code 127\n/bin/bash: line 35: python: command not found",
+  "timestamp": "2026-08-11T07:58:42.735Z",
   "retry_count": 1
 }

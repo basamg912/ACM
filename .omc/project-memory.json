@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1785719315160,
+  "lastScanned": 1786433186273,
   "projectRoot": "/home/kist/work/workspace/ACM",
   "techStack": {
     "languages": [],
@@ -10,7 +10,7 @@
   },
   "build": {
     "buildCommand": null,
-    "testCommand": null,
+    "testCommand": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=/home/kist/work/workspace/ACM/ASAP conda run -n hvgym python -m pytest tests/agents/ -q 2>&1 | tail -5",
     "lintCommand": null,
     "devCommand": null,
     "scripts": {}
@@ -38,7 +38,7 @@
       "path": "ASAP",
       "purpose": null,
       "fileCount": 6,
-      "lastAccessed": 1785719315158,
+      "lastAccessed": 1786433186271,
       "keyFiles": [
         "LICENSE",
         "MUJOCO_LOG.TXT",
@@ -50,7 +50,7 @@
       "path": "GMR",
       "purpose": null,
       "fileCount": 8,
-      "lastAccessed": 1785719315159,
+      "lastAccessed": 1786433186272,
       "keyFiles": [
         "CLAUDE.md",
         "DOC.md",
@@ -63,14 +63,21 @@
       "path": "logs",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1785719315159,
+      "lastAccessed": 1786433186272,
+      "keyFiles": []
+    },
+    "logs_eval": {
+      "path": "logs_eval",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1786433186273,
       "keyFiles": []
     },
     "motionData": {
       "path": "motionData",
       "purpose": null,
       "fileCount": 20,
-      "lastAccessed": 1785719315160,
+      "lastAccessed": 1786433186273,
       "keyFiles": [
         "0-07_01_stageii.pkl",
         "0-07_02_stageii.pkl",
@@ -83,7 +90,7 @@
       "path": "script",
       "purpose": null,
       "fileCount": 17,
-      "lastAccessed": 1785719315160,
+      "lastAccessed": 1786433186273,
       "keyFiles": [
         "dispatch_motions.sh",
         "finetune.md",
@@ -96,7 +103,7 @@
       "path": "test",
       "purpose": "Test files",
       "fileCount": 1,
-      "lastAccessed": 1785719315160,
+      "lastAccessed": 1786433186273,
       "keyFiles": [
         "check_motion_data.py"
       ]
@@ -105,7 +112,7 @@
       "path": "GMR/assets",
       "purpose": "Static assets",
       "fileCount": 3,
-      "lastAccessed": 1785719315160,
+      "lastAccessed": 1786433186273,
       "keyFiles": [
         "GMR.png",
         "GMR_pipeline.png",
@@ -116,7 +123,14 @@
       "path": "GMR/build",
       "purpose": "Build output",
       "fileCount": 0,
-      "lastAccessed": 1785719315160,
+      "lastAccessed": 1786433186273,
+      "keyFiles": []
+    },
+    "logs_eval/TEST": {
+      "path": "logs_eval/TEST",
+      "purpose": "Test files",
+      "fileCount": 0,
+      "lastAccessed": 1786433186273,
       "keyFiles": []
     }
   },
@@ -128,21 +142,27 @@
       "type": "file"
     },
     {
+      "path": "ASAP/humanoidverse/envs/locomotion/locomotion.py",
+      "accessCount": 13,
+      "lastAccessed": 1786409711835,
+      "type": "file"
+    },
+    {
       "path": "ASAP/humanoidverse/agents/ppo/ppo.py",
       "accessCount": 11,
       "lastAccessed": 1785213250786,
       "type": "file"
     },
     {
-      "path": "ASAP/humanoidverse/deploy_agent.py",
-      "accessCount": 10,
-      "lastAccessed": 1785213251228,
+      "path": "ASAP/humanoidverse/agents/modules/ppo_hist_modules.py",
+      "accessCount": 11,
+      "lastAccessed": 1786433293140,
       "type": "file"
     },
     {
-      "path": "ASAP/humanoidverse/agents/modules/ppo_hist_modules.py",
+      "path": "ASAP/humanoidverse/deploy_agent.py",
       "accessCount": 10,
-      "lastAccessed": 1785722321672,
+      "lastAccessed": 1785213251228,
       "type": "file"
     },
     {
@@ -155,12 +175,6 @@
       "path": "ASAP/humanoidverse/envs/motion_tracking/motion_tracking.py",
       "accessCount": 8,
       "lastAccessed": 1785213420800,
-      "type": "file"
-    },
-    {
-      "path": "ASAP/humanoidverse/envs/locomotion/locomotion.py",
-      "accessCount": 8,
-      "lastAccessed": 1785396835619,
       "type": "file"
     },
     {
@@ -177,8 +191,8 @@
     },
     {
       "path": "ASAP/humanoidverse/agents/modules/ppo_hist_v2_modules.py",
-      "accessCount": 4,
-      "lastAccessed": 1785722337357,
+      "accessCount": 5,
+      "lastAccessed": 1786433323115,
       "type": "file"
     },
     {
@@ -200,6 +214,30 @@
       "type": "file"
     },
     {
+      "path": "ASAP/humanoidverse/agents/ppo_hist/ppo_hist.py",
+      "accessCount": 3,
+      "lastAccessed": 1786433293149,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/config/algo/ppo_history_encoder.yaml",
+      "accessCount": 3,
+      "lastAccessed": 1786433324279,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/agents/ppo_hist_v2/ppo_hist_v2.py",
+      "accessCount": 3,
+      "lastAccessed": 1786433348092,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/config/algo/ppo_hist_v2.yaml",
+      "accessCount": 3,
+      "lastAccessed": 1786433348922,
+      "type": "file"
+    },
+    {
       "path": "ASAP/humanoidverse/config/simulator/mujoco.yaml",
       "accessCount": 2,
       "lastAccessed": 1784182935781,
@@ -218,12 +256,6 @@
       "type": "file"
     },
     {
-      "path": "ASAP/humanoidverse/agents/ppo_hist/ppo_hist.py",
-      "accessCount": 2,
-      "lastAccessed": 1785206757698,
-      "type": "file"
-    },
-    {
       "path": "ASAP/humanoidverse/envs/base_task/base_task.py",
       "accessCount": 2,
       "lastAccessed": 1785213239829,
@@ -233,12 +265,6 @@
       "path": "ASAP/humanoidverse/config/base_eval.yaml",
       "accessCount": 2,
       "lastAccessed": 1785213258985,
-      "type": "file"
-    },
-    {
-      "path": "ASAP/humanoidverse/agents/ppo_hist_v2/ppo_hist_v2.py",
-      "accessCount": 2,
-      "lastAccessed": 1785395669586,
       "type": "file"
     },
     {
@@ -254,15 +280,9 @@
       "type": "file"
     },
     {
-      "path": "ASAP/humanoidverse/config/algo/ppo_hist_v2.yaml",
+      "path": "ASAP/humanoidverse/agents/modules/ppo_hist_v3_modules.py",
       "accessCount": 2,
-      "lastAccessed": 1785722341141,
-      "type": "file"
-    },
-    {
-      "path": "ASAP/humanoidverse/config/algo/ppo_history_encoder.yaml",
-      "accessCount": 2,
-      "lastAccessed": 1785722346884,
+      "lastAccessed": 1786433324176,
       "type": "file"
     },
     {
@@ -413,12 +433,6 @@
       "path": "ASAP/humanoidverse/config/exp/locomotion_hist_v2.yaml",
       "accessCount": 1,
       "lastAccessed": 1785395695347,
-      "type": "file"
-    },
-    {
-      "path": "ASAP/humanoidverse/agents/modules/ppo_hist_v3_modules.py",
-      "accessCount": 1,
-      "lastAccessed": 1785466961683,
       "type": "file"
     }
   ],

@@ -1,0 +1,4 @@
+- +checkpoint=ASAP/logs/G1_cmd_cur/20260811_110629-g1_reward_setging-locomotion-g1_29dof_anneal_23dof/model_500.pt
+- +num_envs=1
+- +algo.config.eval_command=[0.0,0.0,0.0,0.0]
+- +simulator=mujoco

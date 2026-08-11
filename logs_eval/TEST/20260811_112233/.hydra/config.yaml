@@ -1,0 +1,36 @@
+eval_timestamp: ${now:%Y%m%d_%H%M%S}
+eval_name: TEST
+eval_log_dir: logs_eval/${eval_name}/${eval_timestamp}
+headless: false
+video: false
+video_length: None
+save_video: false
+simulator:
+  _target_: humanoidverse.simulator.mujoco.mujoco.MuJoCo
+  _recursive_: false
+  config:
+    name: mujoco
+    terrain: ${terrain}
+    plane:
+      static_friction: 1.0
+      dynamic_friction: 1.0
+      restitution: 0.0
+    sim:
+      fps: 200
+      control_decimation: 4
+      substeps: 1
+      realtime_factor: 1.0
+      render_mode: human
+      render_interval: 1
+    scene:
+      num_envs: ${num_envs}
+      env_spacing: ${env.config.env_spacing}
+checkpoint: ASAP/logs/G1_cmd_cur/20260811_110629-g1_reward_setging-locomotion-g1_29dof_anneal_23dof/model_500.pt
+num_envs: 1
+algo:
+  config:
+    eval_command:
+    - 0.0
+    - 0.0
+    - 0.0
+    - 0.0
