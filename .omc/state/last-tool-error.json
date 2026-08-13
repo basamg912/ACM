@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd /tmp && python - <<'EOF'\\nimport re\\np = '/tmp/smoke_hist_v4.py'\\ns = open(p).read()\\ns = s.replace('for mode in (\\\"frozen\\\", \\\"vicreg\\\"):', 'for mode in (\\\"frozen\\\", \\\"vicreg\\\", \\\"crit...",
-  "error": "Exit code 127\n/bin/bash: line 35: python: command not found",
-  "timestamp": "2026-08-11T07:58:42.735Z",
+  "tool_input_preview": "{\"command\":\"for py in \\\"$HOME/anaconda3/envs/hvlab/bin/python\\\" \\\"$HOME/anaconda3/envs/hvgym/bin/python\\\" \\\"$HOME/miniconda3/envs/hvlab/bin/python\\\" \\\"$HOME/miniconda3/envs/hvgym/bin/python\\\" python3;...",
+  "error": "Exit code 2\n/home/kist/anaconda3/envs/hvlab/bin/python OK\nacm\nenv_gym\nenv_isaaclab\netc\ngmr\nhvgen\nhvgym\nhvlab\nisaaclab\none_policy_to_run_them_all",
+  "timestamp": "2026-08-12T06:03:49.529Z",
   "retry_count": 1
 }

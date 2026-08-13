@@ -148,15 +148,15 @@
       "type": "file"
     },
     {
-      "path": "ASAP/humanoidverse/agents/ppo/ppo.py",
-      "accessCount": 11,
-      "lastAccessed": 1785213250786,
+      "path": "ASAP/humanoidverse/agents/modules/ppo_hist_modules.py",
+      "accessCount": 12,
+      "lastAccessed": 1786609500560,
       "type": "file"
     },
     {
-      "path": "ASAP/humanoidverse/agents/modules/ppo_hist_modules.py",
+      "path": "ASAP/humanoidverse/agents/ppo/ppo.py",
       "accessCount": 11,
-      "lastAccessed": 1786433293140,
+      "lastAccessed": 1785213250786,
       "type": "file"
     },
     {
@@ -184,15 +184,21 @@
       "type": "file"
     },
     {
+      "path": "ASAP/humanoidverse/agents/modules/ppo_hist_v2_modules.py",
+      "accessCount": 6,
+      "lastAccessed": 1786609417729,
+      "type": "file"
+    },
+    {
       "path": "ASAP/humanoidverse/config/rewards/loco/reward_kapex_locomotion.yaml",
       "accessCount": 5,
       "lastAccessed": 1784509954305,
       "type": "file"
     },
     {
-      "path": "ASAP/humanoidverse/agents/modules/ppo_hist_v2_modules.py",
-      "accessCount": 5,
-      "lastAccessed": 1786433323115,
+      "path": "ASAP/humanoidverse/agents/ppo_hist_v2/ppo_hist_v2.py",
+      "accessCount": 4,
+      "lastAccessed": 1786609418413,
       "type": "file"
     },
     {
@@ -226,15 +232,15 @@
       "type": "file"
     },
     {
-      "path": "ASAP/humanoidverse/agents/ppo_hist_v2/ppo_hist_v2.py",
-      "accessCount": 3,
-      "lastAccessed": 1786433348092,
-      "type": "file"
-    },
-    {
       "path": "ASAP/humanoidverse/config/algo/ppo_hist_v2.yaml",
       "accessCount": 3,
       "lastAccessed": 1786433348922,
+      "type": "file"
+    },
+    {
+      "path": "ASAP/humanoidverse/agents/modules/ppo_hist_v3_modules.py",
+      "accessCount": 3,
+      "lastAccessed": 1786609404846,
       "type": "file"
     },
     {
@@ -277,12 +283,6 @@
       "path": "ASAP/humanoidverse/config/env/locomotion_cmd_curriculum.yaml",
       "accessCount": 2,
       "lastAccessed": 1785459157545,
-      "type": "file"
-    },
-    {
-      "path": "ASAP/humanoidverse/agents/modules/ppo_hist_v3_modules.py",
-      "accessCount": 2,
-      "lastAccessed": 1786433324176,
       "type": "file"
     },
     {

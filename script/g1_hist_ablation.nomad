@@ -1,28 +1,33 @@
-// Nomad job: G1 reward 기준 history encoder ablation (5개 조합 동시 실행)
+// Nomad job: G1 reward 기준 history encoder ablation (6개 조합 동시 실행)
 //   baseline : PPO                      (+exp=locomotion,                 obs=wolinvel)
 //   hist-v1  : VAE history encoder      (+exp=locomotion_history_encoder, obs=history_encoder)
 //   hist-v2  : student-teacher distill  (+exp=locomotion_hist_v2,         obs=history_encoder)
 //   hist-v3  : v2 + contrastive heads   (+exp=locomotion_hist_v3,         obs=history_encoder)
 //   hist-v4  : teacher VAE 제거, critic 이 phi 학습
 //                                       (+exp=locomotion_hist_v4,         obs=history_encoder_v4)
+//   hist-v5  : v3 + teacher 를 context 조건부 CVAE 로 — c=mixer(history_t),
+//              encoder(c, o_{t+1}), decoder(c, t_mu)→o_{t+1} recon
+//                                       (+exp=locomotion_hist_v5,         obs=history_encoder)
 //
 // 사용법:
 //   export NOMAD_VAR_user=$USER
 //   nomad job run script/g1_hist_ablation.nomad
 //   nomad job run -var node_pool=rtx-gpu -var image=161.122.114.87:5000/hvlab:v0-amd64 \
 //     script/g1_hist_ablation.nomad
-//   // 5개 전부에 공통 override 추가 (예: command curriculum):
+//   // 6개 전부에 공통 override 추가 (예: command curriculum):
 //   nomad job run -var 'extra_args=["env=locomotion_cmd_curriculum"]' script/g1_hist_ablation.nomad
 //
 // 비교 설계 노트:
-//   - project_name 을 하나(G1_hist_ablation)로 묶어 TB 에서 5개 run 을 한 화면에 비교
-//   - seed 는 base config 기본값(0)으로 5개 동일 — 변경 시 extra_args 로 일괄 적용
-//   - baseline 만 obs 가 다름(wolinvel). v1/v2/v3 의 actor_obs 구성은 wolinvel 과 동일하고
+//   - project_name 을 하나(G1_hist_ablation)로 묶어 TB 에서 6개 run 을 한 화면에 비교
+//   - seed 는 base config 기본값(0)으로 6개 동일 — 변경 시 extra_args 로 일괄 적용
+//   - baseline 만 obs 가 다름(wolinvel). v1/v2/v3/v5 의 actor_obs 구성은 wolinvel 과 동일하고
 //     encoder_obs/recon_target 그룹만 추가됨 (obs dims 는 robot.dof_obs_size 기반이라 G1 23dof 자동 대응)
 //   - v4 는 obs 파일이 다름(history_encoder_v4): recon_target 대신 teacher_obs 그룹을 쓰고
 //     privileged(base_pos_z, feet_contact_force) 를 포함한다. actor_obs/encoder_obs 는 동일.
-//   - 노드당 GPU 1장 전제 → distinct_hosts 로 5개 그룹을 서로 다른 노드에 배치.
-//     가용 노드가 5개 미만이면 남는 그룹은 pending 으로 대기.
+//   - v5 는 v2/v3 와 obs 동일(history_encoder) — teacher 가 encoder_obs+next_obs_target 재사용,
+//     rollout/storage/obs 추가 없음.
+//   - 노드당 GPU 1장 전제 → distinct_hosts 로 6개 그룹을 서로 다른 노드에 배치.
+//     가용 노드가 6개 미만이면 남는 그룹은 pending 으로 대기.
 
 variable "acm_root" {
   type    = string
@@ -50,7 +55,7 @@ variable "user" {
   }
 }
 
-// 4개 그룹 전부에 덧붙일 공통 hydra override (예: ["env=locomotion_cmd_curriculum", "seed=1"])
+// 6개 그룹 전부에 덧붙일 공통 hydra override (예: ["env=locomotion_cmd_curriculum", "seed=1"])
 variable "extra_args" {
   type    = list(string)
   default = []
@@ -68,7 +73,7 @@ job "g1-hist-ablation" {
   }
 
   // ---------------------------------------------------------------
-  // 1/4 baseline: plain PPO + wolinvel obs
+  // 1/6 baseline: plain PPO + wolinvel obs
   // ---------------------------------------------------------------
   group "baseline" {
     count = 1
@@ -140,7 +145,7 @@ job "g1-hist-ablation" {
   }
 
   // ---------------------------------------------------------------
-  // 2/4 hist-v1: concurrent VAE history encoder (joint grad)
+  // 2/6 hist-v1: concurrent VAE history encoder (joint grad)
   // ---------------------------------------------------------------
   group "hist-v1" {
     count = 1
@@ -211,7 +216,7 @@ job "g1-hist-ablation" {
   }
 
   // ---------------------------------------------------------------
-  // 3/4 hist-v2: student(v,z)-teacher(next-obs VAE) distillation
+  // 3/6 hist-v2: student(v,z)-teacher(next-obs VAE) distillation
   // ---------------------------------------------------------------
   group "hist-v2" {
     count = 1
@@ -282,7 +287,7 @@ job "g1-hist-ablation" {
   }
 
   // ---------------------------------------------------------------
-  // 4/4 hist-v3: v2 + contrastive projection heads (InfoNCE)
+  // 4/6 hist-v3: v2 + contrastive projection heads (InfoNCE)
   // ---------------------------------------------------------------
   group "hist-v3" {
     count = 1
@@ -353,7 +358,7 @@ job "g1-hist-ablation" {
   }
 
   // ---------------------------------------------------------------
-  // 5/5 hist-v4: teacher VAE 제거, critic 이 teacher latent 로 phi 학습
+  // 5/6 hist-v4: teacher VAE 제거, critic 이 teacher latent 로 phi 학습
   //   obs 는 teacher_obs 그룹이 있는 v4 전용 파일이어야 한다 (privileged 포함)
   // ---------------------------------------------------------------
   group "hist-v4" {
@@ -407,6 +412,79 @@ job "g1-hist-ablation" {
           "isaac-cache-compute-g1hv4:/home/hvlab/.nv/ComputeCache",
           "isaac-logs-g1hv4:/home/hvlab/.nvidia-omniverse/logs",
           "isaac-data-g1hv4:/home/hvlab/.local/share/ov/data",
+        ]
+      }
+
+      env {
+        ACCEPT_EULA                = "Y"
+        PRIVACY_CONSENT            = "Y"
+        NVIDIA_VISIBLE_DEVICES     = "all"
+        NVIDIA_DRIVER_CAPABILITIES = "all"
+      }
+
+      resources {
+        cpu    = 8000
+        memory = 16000
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------
+  // 6/6 hist-v5: v3 + teacher 를 context 조건부 CVAE 로
+  //   c=mixer(history_t, student 와 동일 window), encoder(c, o_{t+1}),
+  //   decoder(c, t_mu)→o_{t+1} recon. obs 는 v2/v3 와 동일(history_encoder).
+  // ---------------------------------------------------------------
+  group "hist-v5" {
+    count = 1
+    restart {
+      attempts = 0
+      mode     = "fail"
+    }
+    reschedule {
+      attempts  = 0
+      unlimited = false
+    }
+
+    task "train" {
+      driver = "docker"
+      user   = "root"
+
+      config {
+        image        = var.image
+	image_pull_timeout = "30m"
+        runtime      = "nvidia"
+        network_mode = "host"
+        work_dir     = "/workspace/ASAP"
+
+        command = "python"
+        args = concat([
+          "humanoidverse/train_agent.py",
+          "+simulator=isaacsim",
+          "+exp=locomotion_hist_v5",
+          "+domain_rand=NO_domain_rand",
+          "+rewards=loco/reward_g1_locomotion",
+          "+robot=g1/g1_29dof_anneal_23dof",
+          "+terrain=terrain_locomotion_plane",
+          "+obs=loco/leggedloco_obs_history_encoder",
+          "num_envs=4096",
+          "project_name=G1_hist_ablation",
+          "experiment_name=hist_v5",
+          "headless=True",
+        ], var.extra_args)
+
+        volumes = [
+          "${var.acm_root}/ASAP:/workspace/ASAP",
+          "${var.acm_root}/GMR:/workspace/GMR",
+          "${var.acm_root}/motionData:/workspace/motionData",
+          "${var.acm_root}/script:/workspace/script",
+          "${var.acm_root}/logs:/workspace/logs",
+          "isaac-cache-kit-g1hv5:/isaac-sim/kit/cache",
+          "isaac-cache-ov-g1hv5:/home/hvlab/.cache/ov",
+          "isaac-cache-pip-g1hv5:/home/hvlab/.cache/pip",
+          "isaac-cache-gl-g1hv5:/home/hvlab/.cache/nvidia/GLCache",
+          "isaac-cache-compute-g1hv5:/home/hvlab/.nv/ComputeCache",
+          "isaac-logs-g1hv5:/home/hvlab/.nvidia-omniverse/logs",
+          "isaac-data-g1hv5:/home/hvlab/.local/share/ov/data",
         ]
       }
 
