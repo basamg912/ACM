@@ -16,6 +16,9 @@
 //     script/g1_hist_ablation.nomad
 //   // 6개 전부에 공통 override 추가 (예: command curriculum):
 //   nomad job run -var 'extra_args=["env=locomotion_cmd_curriculum"]' script/g1_hist_ablation.nomad
+//   // wandb 로깅: 키를 넘기면 6개 전부에 +opt=wandb 가 자동으로 붙는다 (미지정 시 TB only)
+//   export NOMAD_VAR_wandb_api_key=<https://wandb.ai/authorize 에서 발급>
+//   nomad job run script/g1_hist_ablation.nomad
 //
 // 비교 설계 노트:
 //   - project_name 을 하나(G1_hist_ablation)로 묶어 TB 에서 6개 run 을 한 화면에 비교
@@ -69,6 +72,29 @@ variable "disabled_groups" {
   default = []
 }
 
+// wandb 로깅. 키가 있으면 6개 전부 +opt=wandb 자동 활성화 — train_agent.py 가
+// sync_tensorboard=True 로 init 하므로 TB 스칼라가 그대로 wandb 에 미러링된다.
+// 키는 git 에 남지 않게 파일에 쓰지 말고 NOMAD_VAR_wandb_api_key 로만 전달할 것.
+variable "wandb_api_key" {
+  type        = string
+  default     = ""
+  description = "W&B API key — export NOMAD_VAR_wandb_api_key=... (비우면 wandb off)"
+}
+
+// 개인 계정이면 비워두기(null → API key 의 기본 entity 로 업로드).
+// 기본 config(opt/wandb.yaml)의 entity 는 ASAP 원저자 팀(agileh2o)이라 그대로 쓰면 403.
+variable "wandb_entity" {
+  type    = string
+  default = ""
+}
+
+locals {
+  wandb_args = var.wandb_api_key == "" ? [] : [
+    "+opt=wandb",
+    "wandb.wandb_entity=${var.wandb_entity == "" ? "null" : var.wandb_entity}",
+  ]
+}
+
 job "g1-hist-ablation" {
   datacenters = ["dc1"]
   node_pool   = var.node_pool
@@ -119,7 +145,7 @@ job "g1-hist-ablation" {
           "project_name=G1_hist_ablation",
           "experiment_name=baseline",
           "headless=True",
-        ], var.extra_args)
+        ], local.wandb_args, var.extra_args)
 
         volumes = [
           "${var.acm_root}/ASAP:/workspace/ASAP",
@@ -143,6 +169,7 @@ job "g1-hist-ablation" {
         PRIVACY_CONSENT            = "Y"
         NVIDIA_VISIBLE_DEVICES     = "all"
         NVIDIA_DRIVER_CAPABILITIES = "all"
+        WANDB_API_KEY              = var.wandb_api_key
       }
 
       resources {
@@ -191,7 +218,7 @@ job "g1-hist-ablation" {
           "project_name=G1_hist_ablation",
           "experiment_name=hist_v1",
           "headless=True",
-        ], var.extra_args)
+        ], local.wandb_args, var.extra_args)
 
         volumes = [
           "${var.acm_root}/ASAP:/workspace/ASAP",
@@ -214,6 +241,7 @@ job "g1-hist-ablation" {
         PRIVACY_CONSENT            = "Y"
         NVIDIA_VISIBLE_DEVICES     = "all"
         NVIDIA_DRIVER_CAPABILITIES = "all"
+        WANDB_API_KEY              = var.wandb_api_key
       }
 
       resources {
@@ -262,7 +290,7 @@ job "g1-hist-ablation" {
           "project_name=G1_hist_ablation",
           "experiment_name=hist_v2",
           "headless=True",
-        ], var.extra_args)
+        ], local.wandb_args, var.extra_args)
 
         volumes = [
           "${var.acm_root}/ASAP:/workspace/ASAP",
@@ -285,6 +313,7 @@ job "g1-hist-ablation" {
         PRIVACY_CONSENT            = "Y"
         NVIDIA_VISIBLE_DEVICES     = "all"
         NVIDIA_DRIVER_CAPABILITIES = "all"
+        WANDB_API_KEY              = var.wandb_api_key
       }
 
       resources {
@@ -333,7 +362,7 @@ job "g1-hist-ablation" {
           "project_name=G1_hist_ablation",
           "experiment_name=hist_v3",
           "headless=True",
-        ], var.extra_args)
+        ], local.wandb_args, var.extra_args)
 
         volumes = [
           "${var.acm_root}/ASAP:/workspace/ASAP",
@@ -356,6 +385,7 @@ job "g1-hist-ablation" {
         PRIVACY_CONSENT            = "Y"
         NVIDIA_VISIBLE_DEVICES     = "all"
         NVIDIA_DRIVER_CAPABILITIES = "all"
+        WANDB_API_KEY              = var.wandb_api_key
       }
 
       resources {
@@ -405,7 +435,7 @@ job "g1-hist-ablation" {
           "project_name=G1_hist_ablation",
           "experiment_name=hist_v4",
           "headless=True",
-        ], var.extra_args)
+        ], local.wandb_args, var.extra_args)
 
         volumes = [
           "${var.acm_root}/ASAP:/workspace/ASAP",
@@ -428,6 +458,7 @@ job "g1-hist-ablation" {
         PRIVACY_CONSENT            = "Y"
         NVIDIA_VISIBLE_DEVICES     = "all"
         NVIDIA_DRIVER_CAPABILITIES = "all"
+        WANDB_API_KEY              = var.wandb_api_key
       }
 
       resources {
@@ -478,7 +509,7 @@ job "g1-hist-ablation" {
           "project_name=G1_hist_ablation",
           "experiment_name=hist_v5",
           "headless=True",
-        ], var.extra_args)
+        ], local.wandb_args, var.extra_args)
 
         volumes = [
           "${var.acm_root}/ASAP:/workspace/ASAP",
@@ -501,6 +532,7 @@ job "g1-hist-ablation" {
         PRIVACY_CONSENT            = "Y"
         NVIDIA_VISIBLE_DEVICES     = "all"
         NVIDIA_DRIVER_CAPABILITIES = "all"
+        WANDB_API_KEY              = var.wandb_api_key
       }
 
       resources {

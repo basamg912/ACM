@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"for py in \\\"$HOME/anaconda3/envs/hvlab/bin/python\\\" \\\"$HOME/anaconda3/envs/hvgym/bin/python\\\" \\\"$HOME/miniconda3/envs/hvlab/bin/python\\\" \\\"$HOME/miniconda3/envs/hvgym/bin/python\\\" python3;...",
-  "error": "Exit code 2\n/home/kist/anaconda3/envs/hvlab/bin/python OK\nacm\nenv_gym\nenv_isaaclab\netc\ngmr\nhvgen\nhvgym\nhvlab\nisaaclab\none_policy_to_run_them_all",
-  "timestamp": "2026-08-12T06:03:49.529Z",
+  "tool_input_preview": "{\"command\":\"which nomad && NOMAD_VAR_user=testuser nomad job run -output script/g1_hist_ablation.nomad > /tmp/wandb_off.json 2>/tmp/wandb_off.err; echo \\\"exit=$?\\\"; tail -3 /tmp/wandb_off.err\",\"descri...",
+  "error": "Exit code 1\nexit=1\ntail: cannot open '/tmp/wandb_off.err' for reading: No such file or directory",
+  "timestamp": "2026-08-14T05:49:51.167Z",
   "retry_count": 1
 }
