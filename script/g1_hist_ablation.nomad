@@ -61,6 +61,14 @@ variable "extra_args" {
   default = []
 }
 
+// 제출 시점에 특정 그룹만 비활성화 (count=0 처리, 주석처리 불필요):
+//   nomad job run -var 'disabled_groups=["hist-v1","hist-v4"]' script/g1_hist_ablation.nomad
+// 이미 돌고 있는 잡은 파일 수정 없이: nomad job scale g1-hist-ablation <group> 0
+variable "disabled_groups" {
+  type    = list(string)
+  default = []
+}
+
 job "g1-hist-ablation" {
   datacenters = ["dc1"]
   node_pool   = var.node_pool
@@ -76,7 +84,7 @@ job "g1-hist-ablation" {
   // 1/6 baseline: plain PPO + wolinvel obs
   // ---------------------------------------------------------------
   group "baseline" {
-    count = 1
+    count = contains(var.disabled_groups, "baseline") ? 0 : 1
     restart {
       attempts = 0
       mode     = "fail"
@@ -148,7 +156,7 @@ job "g1-hist-ablation" {
   // 2/6 hist-v1: concurrent VAE history encoder (joint grad)
   // ---------------------------------------------------------------
   group "hist-v1" {
-    count = 1
+    count = contains(var.disabled_groups, "hist-v1") ? 0 : 1
     restart {
       attempts = 0
       mode     = "fail"
@@ -219,7 +227,7 @@ job "g1-hist-ablation" {
   // 3/6 hist-v2: student(v,z)-teacher(next-obs VAE) distillation
   // ---------------------------------------------------------------
   group "hist-v2" {
-    count = 1
+    count = contains(var.disabled_groups, "hist-v2") ? 0 : 1
     restart {
       attempts = 0
       mode     = "fail"
@@ -290,7 +298,7 @@ job "g1-hist-ablation" {
   // 4/6 hist-v3: v2 + contrastive projection heads (InfoNCE)
   // ---------------------------------------------------------------
   group "hist-v3" {
-    count = 1
+    count = contains(var.disabled_groups, "hist-v3") ? 0 : 1
     restart {
       attempts = 0
       mode     = "fail"
@@ -362,7 +370,7 @@ job "g1-hist-ablation" {
   //   obs 는 teacher_obs 그룹이 있는 v4 전용 파일이어야 한다 (privileged 포함)
   // ---------------------------------------------------------------
   group "hist-v4" {
-    count = 1
+    count = contains(var.disabled_groups, "hist-v4") ? 0 : 1
     restart {
       attempts = 0
       mode     = "fail"
@@ -435,7 +443,7 @@ job "g1-hist-ablation" {
   //   decoder(c, t_mu)→o_{t+1} recon. obs 는 v2/v3 와 동일(history_encoder).
   // ---------------------------------------------------------------
   group "hist-v5" {
-    count = 1
+    count = contains(var.disabled_groups, "hist-v5") ? 0 : 1
     restart {
       attempts = 0
       mode     = "fail"
