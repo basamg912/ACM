@@ -19,6 +19,11 @@
 //   // wandb 로깅: 키를 넘기면 6개 전부에 +opt=wandb 가 자동으로 붙는다 (미지정 시 TB only)
 //   export NOMAD_VAR_wandb_api_key=<https://wandb.ai/authorize 에서 발급>
 //   nomad job run script/g1_hist_ablation.nomad
+//   // 체크포인트 자동 승계: 모든 그룹에 auto_load_latest=True 기본 — 같은 experiment
+//   //   (project/experiment_name/robot 동일)의 이전 run dir 에서 최신 model_*.pt 를 찾아
+//   //   이어 학습한다 (노드 전원 차단 후 재시작 대비). 리워드/설정을 바꿔 처음부터
+//   //   돌리려면 experiment_name 을 바꾸거나:
+//   nomad job run -var 'extra_args=["auto_load_latest=False"]' script/g1_hist_ablation.nomad
 //
 // 비교 설계 노트:
 //   - project_name 을 하나(G1_hist_ablation)로 묶어 TB 에서 6개 run 을 한 화면에 비교
@@ -93,6 +98,10 @@ locals {
     "+opt=wandb",
     "wandb.wandb_entity=${var.wandb_entity == "" ? "null" : var.wandb_entity}",
   ]
+  // 이미지(hvlab:v0)의 wandb 0.24.0 은 TB sync 가 tfevents ~1MB 지점에서 영구 정지하는
+  // 회귀가 있어 (0.25.0 에서 수정, wandb/wandb#11334) 학습 전에 업그레이드한다.
+  // pip 실패(오프라인 등) 시에도 경고만 남기고 학습은 계속 진행.
+  train_prefix = "pip install -qU 'wandb>=0.28' || echo '[WARN] wandb upgrade failed; charts may freeze after ~30min (wandb 0.24.0 TB-sync bug)'; exec python humanoidverse/train_agent.py"
 }
 
 job "g1-hist-ablation" {
@@ -131,9 +140,9 @@ job "g1-hist-ablation" {
         network_mode = "host"
         work_dir     = "/workspace/ASAP"
 
-        command = "python"
-        args = concat([
-          "humanoidverse/train_agent.py",
+        command = "bash"
+        args = ["-c", join(" ", concat([
+          local.train_prefix,
           "+simulator=isaacsim",
           "+exp=locomotion",
           "+domain_rand=NO_domain_rand",
@@ -145,7 +154,8 @@ job "g1-hist-ablation" {
           "project_name=G1_hist_ablation",
           "experiment_name=baseline",
           "headless=True",
-        ], local.wandb_args, var.extra_args)
+          "auto_load_latest=True",
+        ], local.wandb_args, var.extra_args))]
 
         volumes = [
           "${var.acm_root}/ASAP:/workspace/ASAP",
@@ -204,9 +214,9 @@ job "g1-hist-ablation" {
         network_mode = "host"
         work_dir     = "/workspace/ASAP"
 
-        command = "python"
-        args = concat([
-          "humanoidverse/train_agent.py",
+        command = "bash"
+        args = ["-c", join(" ", concat([
+          local.train_prefix,
           "+simulator=isaacsim",
           "+exp=locomotion_history_encoder",
           "+domain_rand=NO_domain_rand",
@@ -218,7 +228,8 @@ job "g1-hist-ablation" {
           "project_name=G1_hist_ablation",
           "experiment_name=hist_v1",
           "headless=True",
-        ], local.wandb_args, var.extra_args)
+          "auto_load_latest=True",
+        ], local.wandb_args, var.extra_args))]
 
         volumes = [
           "${var.acm_root}/ASAP:/workspace/ASAP",
@@ -276,9 +287,9 @@ job "g1-hist-ablation" {
         network_mode = "host"
         work_dir     = "/workspace/ASAP"
 
-        command = "python"
-        args = concat([
-          "humanoidverse/train_agent.py",
+        command = "bash"
+        args = ["-c", join(" ", concat([
+          local.train_prefix,
           "+simulator=isaacsim",
           "+exp=locomotion_hist_v2",
           "+domain_rand=NO_domain_rand",
@@ -290,7 +301,8 @@ job "g1-hist-ablation" {
           "project_name=G1_hist_ablation",
           "experiment_name=hist_v2",
           "headless=True",
-        ], local.wandb_args, var.extra_args)
+          "auto_load_latest=True",
+        ], local.wandb_args, var.extra_args))]
 
         volumes = [
           "${var.acm_root}/ASAP:/workspace/ASAP",
@@ -348,9 +360,9 @@ job "g1-hist-ablation" {
         network_mode = "host"
         work_dir     = "/workspace/ASAP"
 
-        command = "python"
-        args = concat([
-          "humanoidverse/train_agent.py",
+        command = "bash"
+        args = ["-c", join(" ", concat([
+          local.train_prefix,
           "+simulator=isaacsim",
           "+exp=locomotion_hist_v3",
           "+domain_rand=NO_domain_rand",
@@ -362,7 +374,8 @@ job "g1-hist-ablation" {
           "project_name=G1_hist_ablation",
           "experiment_name=hist_v3",
           "headless=True",
-        ], local.wandb_args, var.extra_args)
+          "auto_load_latest=True",
+        ], local.wandb_args, var.extra_args))]
 
         volumes = [
           "${var.acm_root}/ASAP:/workspace/ASAP",
@@ -421,9 +434,9 @@ job "g1-hist-ablation" {
         network_mode = "host"
         work_dir     = "/workspace/ASAP"
 
-        command = "python"
-        args = concat([
-          "humanoidverse/train_agent.py",
+        command = "bash"
+        args = ["-c", join(" ", concat([
+          local.train_prefix,
           "+simulator=isaacsim",
           "+exp=locomotion_hist_v4",
           "+domain_rand=NO_domain_rand",
@@ -435,7 +448,8 @@ job "g1-hist-ablation" {
           "project_name=G1_hist_ablation",
           "experiment_name=hist_v4",
           "headless=True",
-        ], local.wandb_args, var.extra_args)
+          "auto_load_latest=True",
+        ], local.wandb_args, var.extra_args))]
 
         volumes = [
           "${var.acm_root}/ASAP:/workspace/ASAP",
@@ -495,9 +509,9 @@ job "g1-hist-ablation" {
         network_mode = "host"
         work_dir     = "/workspace/ASAP"
 
-        command = "python"
-        args = concat([
-          "humanoidverse/train_agent.py",
+        command = "bash"
+        args = ["-c", join(" ", concat([
+          local.train_prefix,
           "+simulator=isaacsim",
           "+exp=locomotion_hist_v5",
           "+domain_rand=NO_domain_rand",
@@ -509,7 +523,8 @@ job "g1-hist-ablation" {
           "project_name=G1_hist_ablation",
           "experiment_name=hist_v5",
           "headless=True",
-        ], local.wandb_args, var.extra_args)
+          "auto_load_latest=True",
+        ], local.wandb_args, var.extra_args))]
 
         volumes = [
           "${var.acm_root}/ASAP:/workspace/ASAP",

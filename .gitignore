@@ -3,3 +3,6 @@ motion
 motionData
 logs/MotionTracking
 ckpt
+.omc/*
+!.omc/skills/
+!.omc/skills/**
