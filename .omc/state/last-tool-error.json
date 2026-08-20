@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"which nomad && NOMAD_VAR_user=testuser nomad job run -output script/g1_hist_ablation.nomad > /tmp/wandb_off.json 2>/tmp/wandb_off.err; echo \\\"exit=$?\\\"; tail -3 /tmp/wandb_off.err\",\"descri...",
-  "error": "Exit code 1\nexit=1\ntail: cannot open '/tmp/wandb_off.err' for reading: No such file or directory",
-  "timestamp": "2026-08-14T05:49:51.167Z",
-  "retry_count": 1
-}
