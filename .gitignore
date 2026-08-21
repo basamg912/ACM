@@ -6,3 +6,4 @@ ckpt
 .omc/*
 !.omc/skills/
 !.omc/skills/**
+.DS_Store
