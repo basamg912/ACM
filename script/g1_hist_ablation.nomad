@@ -3,7 +3,7 @@
 //   hist-v1  : VAE history encoder      (+exp=locomotion_history_encoder, obs=history_encoder)
 //   hist-v2  : student-teacher distill  (+exp=locomotion_hist_v2,         obs=history_encoder)
 //   hist-v3  : v2 + contrastive heads   (+exp=locomotion_hist_v3,         obs=history_encoder)
-//   hist-v4  : teacher VAE 제거, critic 이 phi 학습
+//   hist-v4  : task critic teacher + PPO/velocity/contrastive student
 //                                       (+exp=locomotion_hist_v4,         obs=history_encoder_v4)
 //   hist-v5  : v3 + teacher 를 context 조건부 CVAE 로 — c=mixer(history_t),
 //              encoder(c, o_{t+1}), decoder(c, t_mu)→o_{t+1} recon
@@ -30,8 +30,8 @@
 //   - seed 는 base config 기본값(0)으로 6개 동일 — 변경 시 extra_args 로 일괄 적용
 //   - baseline 만 obs 가 다름(wolinvel). v1/v2/v3/v5 의 actor_obs 구성은 wolinvel 과 동일하고
 //     encoder_obs/recon_target 그룹만 추가됨 (obs dims 는 robot.dof_obs_size 기반이라 G1 23dof 자동 대응)
-//   - v4 는 obs 파일이 다름(history_encoder_v4): recon_target 대신 teacher_obs 그룹을 쓰고
-//     privileged(base_pos_z, feet_contact_force) 를 포함한다. actor_obs/encoder_obs 는 동일.
+//   - v4 는 obs 파일이 다름(history_encoder_v4): critic history를 제거하고 teacher_obs에
+//     privileged(base_pos_z, feet_contact_force)를 포함한다. actor_obs/encoder_obs는 동일.
 //   - v5 는 v2/v3 와 obs 동일(history_encoder) — teacher 가 encoder_obs+next_obs_target 재사용,
 //     rollout/storage/obs 추가 없음.
 //   - 노드당 GPU 1장 전제 → distinct_hosts 로 6개 그룹을 서로 다른 노드에 배치.
@@ -409,8 +409,8 @@ job "g1-hist-ablation" {
   }
 
   // ---------------------------------------------------------------
-  // 5/6 hist-v4: teacher VAE 제거, critic 이 teacher latent 로 phi 학습
-  //   obs 는 teacher_obs 그룹이 있는 v4 전용 파일이어야 한다 (privileged 포함)
+  // 5/6 hist-v4: task critic teacher + PPO/velocity/contrastive student
+  //   critic은 current state + teacher latent만 사용 (history는 student 전용)
   // ---------------------------------------------------------------
   group "hist-v4" {
     count = contains(var.disabled_groups, "hist-v4") ? 0 : 1
@@ -446,7 +446,7 @@ job "g1-hist-ablation" {
           "+obs=loco/leggedloco_obs_history_encoder_v4_wphase",
           "num_envs=4096",
           "project_name=G1_hist_ablation",
-          "experiment_name=hist_v4",
+          "experiment_name=hist_v4_task_contrastive",
           "headless=True",
           "auto_load_latest=True",
         ], local.wandb_args, var.extra_args))]
