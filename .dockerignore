@@ -6,3 +6,18 @@ motion
 script
 test
 **/.git
+
+# Training/evaluation outputs are bind-mounted from the host and must not be
+# sent as image build context.
+ASAP/logs
+ASAP/logs_eval
+ASAP/ckpt
+ASAP/runs
+
+# Local/generated metadata.
+ASAP/.omc
+ASAP/.pytest_cache
+ASAP/asap.egg-info
+ASAP/MUJOCO_LOG.TXT
+**/__pycache__
+**/*.pyc
