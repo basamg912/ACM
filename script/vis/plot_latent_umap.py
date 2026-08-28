@@ -23,7 +23,7 @@ if str(ACM_ROOT) not in sys.path:
 
 import numpy as np
 
-from script.result_paths import plot_result_path
+from script.result_paths import configure_visualization_cache, plot_result_path
 
 
 COLORS = ("command", "vx", "vy", "wz", "phase")
@@ -226,6 +226,7 @@ def main():
     parser = make_parser()
     args = parser.parse_args()
     try:
+        configure_visualization_cache(args.results_root)
         samples = load_samples(
             args.npz, drop_after_reset=args.drop_after_reset,
             max_samples=args.max_samples, seed=args.seed)

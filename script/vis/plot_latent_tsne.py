@@ -19,7 +19,7 @@ if str(ACM_ROOT) not in sys.path:
 
 import numpy as np
 
-from script.result_paths import plot_result_path
+from script.result_paths import configure_visualization_cache, plot_result_path
 
 
 def main():
@@ -35,6 +35,7 @@ def main():
     ap.add_argument("--results-root", type=Path, default=None)
     args = ap.parse_args()
 
+    configure_visualization_cache(args.results_root)
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt

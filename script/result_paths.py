@@ -18,6 +18,19 @@ def get_results_root(override=None):
     return root
 
 
+def configure_visualization_cache(results_root=None):
+    """Use writable project-local caches for Matplotlib and Numba/UMAP."""
+    cache_root = get_results_root(results_root) / ".cache"
+    cache_dirs = {
+        "MPLCONFIGDIR": cache_root / "matplotlib",
+        "NUMBA_CACHE_DIR": cache_root / "numba",
+    }
+    for variable, directory in cache_dirs.items():
+        directory.mkdir(parents=True, exist_ok=True)
+        os.environ.setdefault(variable, str(directory))
+    return cache_root
+
+
 def _safe_component(value):
     component = re.sub(r"[^\w.-]+", "_", str(value).strip())
     return component.strip("._") or "unnamed"
