@@ -21,7 +21,7 @@
 (obs_stats npz 에서 계산, 물리 단위 — 노이즈는 obs_scales 적용 전에 더해진다).
 
 사용 예:
-  python humanoidverse/eval_obs_corruption.py \
+  python script/eval/eval_obs_corruption.py \
     +checkpoint=ckpt/hist_ablation/rew1/baseline/model_61000.pt +simulator=isaacsim \
     ++headless=True ++vx=0.5 ++envs_per_cond=24
 """
@@ -31,6 +31,12 @@ import os
 import sys
 from pathlib import Path
 
+ACM_ROOT = Path(__file__).resolve().parents[2]
+ASAP_ROOT = ACM_ROOT / "ASAP"
+for repo_path in (ACM_ROOT, ASAP_ROOT):
+    if str(repo_path) not in sys.path:
+        sys.path.insert(0, str(repo_path))
+
 import hydra
 from hydra.core.hydra_config import HydraConfig
 from hydra.utils import instantiate
@@ -39,6 +45,7 @@ from omegaconf import OmegaConf, open_dict
 
 from humanoidverse.utils.config_utils import *  # noqa: E402, F403
 from humanoidverse.utils.logging import HydraLoggerBridge
+from script.result_paths import checkpoint_result_path
 
 TARGETS = ["dof_pos", "dof_vel", "projected_gravity", "base_ang_vel"]
 TARGET_SETS = {t: [t] for t in TARGETS}
@@ -104,7 +111,8 @@ def actor_obs_spans(actor_obs_keys, obs_dims, obs_auxiliary=None):
 
 
 def measured_sigma(ckpt_dir, obs_scales, ckpt_num=None, npz_path=None,
-                   actor_obs_keys=None, obs_dims=None, obs_auxiliary=None):
+                   actor_obs_keys=None, obs_dims=None, obs_auxiliary=None,
+                   checkpoint=None, results_root=None):
     """obs_stats npz 에서 obs 키별 실측 sigma (물리 단위) 계산.
 
     npz 의 actor_obs 는 obs_scales 가 곱해진 뒤의 값이라, 노이즈를 넣는 지점
@@ -119,8 +127,22 @@ def measured_sigma(ckpt_dir, obs_scales, ckpt_num=None, npz_path=None,
     if npz_path is not None:
         path = Path(npz_path)
     else:
-        path = (Path(ckpt_dir) / "obs_stats" / f"obs_ckpt_{ckpt_num}.npz"
-                if ckpt_num is not None else None)
+        path = None
+        if checkpoint is not None and ckpt_num is not None:
+            central_path = checkpoint_result_path(
+                checkpoint,
+                "obs_stats",
+                f"obs_ckpt_{ckpt_num}.npz",
+                results_root=results_root,
+            )
+            if central_path.exists():
+                path = central_path
+        legacy_path = (
+            Path(ckpt_dir) / "obs_stats" / f"obs_ckpt_{ckpt_num}.npz"
+            if ckpt_num is not None else None
+        )
+        if path is None and legacy_path is not None and legacy_path.exists():
+            path = legacy_path
         if path is None or not path.exists():
             cand = sorted((Path(ckpt_dir) / "obs_stats").glob("obs_ckpt_*.npz"))
             if cand:
@@ -285,7 +307,7 @@ def run(env, algo, torch, cfg, conds, env_cond, state):
     return {k: v.cpu().numpy() for k, v in per_env.items()}
 
 
-@hydra.main(config_path="config", config_name="base_eval")
+@hydra.main(config_path="../../ASAP/humanoidverse/config", config_name="base_eval")
 def main(override_config: OmegaConf):
     hydra_log_path = os.path.join(HydraConfig.get().runtime.output_dir, "corruption.log")
     logger.remove()
@@ -293,7 +315,7 @@ def main(override_config: OmegaConf):
     logger.add(sys.stdout, level=os.environ.get("LOGURU_LEVEL", "INFO").upper(), colorize=True)
     logging.basicConfig(level=logging.INFO)
     logging.getLogger().addHandler(HydraLoggerBridge())
-    os.chdir(hydra.utils.get_original_cwd())
+    os.chdir(ASAP_ROOT)
 
     assert override_config.checkpoint is not None, "+checkpoint=<path/model_X.pt> 가 필요합니다"
     checkpoint = Path(override_config.checkpoint)
@@ -350,7 +372,9 @@ def main(override_config: OmegaConf):
                            npz_path=config.get("sigma_npz", None),
                            actor_obs_keys=config.env.config.obs.obs_dict.actor_obs,
                            obs_dims=config.env.config.obs.obs_dims,
-                           obs_auxiliary=config.env.config.obs.obs_auxiliary)
+                           obs_auxiliary=config.env.config.obs.obs_auxiliary,
+                           checkpoint=checkpoint,
+                           results_root=config.get("results_root", None))
     logger.info("실측 sigma (물리 단위): " + ", ".join(f"{k}={v:.3f}" for k, v in sigma.items()))
 
     env = instantiate(config.env, device=device)
@@ -384,7 +408,10 @@ def main(override_config: OmegaConf):
                      res["act_rate"][m].mean()))
 
     out_path = config.get("out", None)
-    out_path = Path(out_path) if out_path else checkpoint.parent / "corruption" / "sweep.npz"
+    out_path = Path(out_path) if out_path else checkpoint_result_path(
+        checkpoint, "obs_corruption", "sweep.npz",
+        results_root=config.get("results_root", None),
+    )
     out_path.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(
         out_path, env_cond=idx, sigma=np.array([sigma[k] for k in TARGETS]),
@@ -400,4 +427,5 @@ def main(override_config: OmegaConf):
 
 
 if __name__ == "__main__":
+    os.chdir(ASAP_ROOT)
     main()

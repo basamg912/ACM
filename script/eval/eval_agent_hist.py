@@ -4,17 +4,22 @@ import sys
 import threading
 from pathlib import Path
 
+ACM_ROOT = Path(__file__).resolve().parents[2]
+ASAP_ROOT = ACM_ROOT / "ASAP"
+for repo_path in (ACM_ROOT, ASAP_ROOT):
+    if str(repo_path) not in sys.path:
+        sys.path.insert(0, str(repo_path))
+
 import hydra
 from hydra.core.config_store import ConfigStore
 from hydra.core.hydra_config import HydraConfig
 from hydra.utils import instantiate
 from loguru import logger
 from omegaconf import OmegaConf
-from utils.config_utils import *  # noqa: E402, F403
-
 # add argparse arguments
 from humanoidverse.utils.config_utils import *  # noqa: E402, F403
 from humanoidverse.utils.logging import HydraLoggerBridge
+from script.result_paths import checkpoint_result_dir
 
 # from pynput import keyboard
 
@@ -68,7 +73,7 @@ def listen_for_keypress(env):
 # from humanoidverse.envs.base_task.omnih2o_cfg import OmniH2OCfg
 
 
-@hydra.main(config_path="config", config_name="base_eval")
+@hydra.main(config_path="../../ASAP/humanoidverse/config", config_name="base_eval")
 def main(override_config: OmegaConf):
     # logging to hydra log file
     hydra_log_path = os.path.join(HydraConfig.get().runtime.output_dir, "eval.log")
@@ -82,7 +87,7 @@ def main(override_config: OmegaConf):
     logging.basicConfig(level=logging.DEBUG)
     logging.getLogger().addHandler(HydraLoggerBridge())
 
-    os.chdir(hydra.utils.get_original_cwd())
+    os.chdir(ASAP_ROOT)
 
     if override_config.checkpoint is not None:
         has_config = True
@@ -167,17 +172,26 @@ def main(override_config: OmegaConf):
     else:
         device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
-    eval_log_dir = Path(config.eval_log_dir)
+    ckpt_num = checkpoint.stem.split("_")[-1]
+    configured_output_dir = config.get("eval_output_dir", None)
+    eval_log_dir = (
+        Path(configured_output_dir)
+        if configured_output_dir
+        else checkpoint_result_dir(
+            checkpoint,
+            "agent",
+            results_root=config.get("results_root", None),
+            timestamp=config.get("eval_timestamp", None),
+        )
+    )
     eval_log_dir.mkdir(parents=True, exist_ok=True)
+    logger.add(eval_log_dir / "eval.log", level="DEBUG")
 
     logger.info(f"Saving eval logs to {eval_log_dir}")
     with open(eval_log_dir / "config.yaml", "w") as file:
         OmegaConf.save(config, file)
 
-    ckpt_num = config.checkpoint.split("/")[-1].split("_")[-1].split(".")[0]
-    config.env.config.save_rendering_dir = str(
-        checkpoint.parent / "renderings" / f"ckpt_{ckpt_num}"
-    )
+    config.env.config.save_rendering_dir = str(eval_log_dir / "renderings")
     config.env.config.ckpt_dir = str(
         checkpoint.parent
     )  # commented out for now, might need it back to save motion
@@ -255,12 +269,7 @@ def main(override_config: OmegaConf):
 
     checkpoint_path = str(checkpoint)
 
-    checkpoint_dir = os.path.dirname(checkpoint_path)
-
-    # from checkpoint path
-
-    HV_ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    exported_policy_path = os.path.join(HV_ROOT_DIR, checkpoint_dir, "exported")
+    exported_policy_path = str(eval_log_dir / "exported")
     os.makedirs(exported_policy_path, exist_ok=True)
     exported_policy_name = checkpoint_path.split("/")[-1]
     exported_onnx_name = exported_policy_name.replace(".pt", ".onnx")
@@ -308,4 +317,5 @@ def main(override_config: OmegaConf):
 
 
 if __name__ == "__main__":
+    os.chdir(ASAP_ROOT)
     main()

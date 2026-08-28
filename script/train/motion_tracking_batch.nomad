@@ -1,7 +1,7 @@
 // Parameterized job: 모션 하나당 policy 하나 학습
-// 등록:   nomad job run script/motion_tracking_batch.nomad
+// 등록:   nomad job run script/train/motion_tracking_batch.nomad
 // 실행:   nomad job dispatch -meta motion=0-07_01_stageii kapex-mt-batch
-//        (일괄 실행은 script/dispatch_motions.sh 참고)
+//        (일괄 실행은 script/train/dispatch_motions.sh 참고)
 //
 // 노드당 GPU 1장이므로 static port(gpu_lock) 예약으로 노드당 학습 1개만 뜨게 함.
 // 남는 dispatch 는 자동으로 대기했다가 자리가 나면 실행됨.

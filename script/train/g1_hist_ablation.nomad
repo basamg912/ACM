@@ -11,19 +11,19 @@
 //
 // 사용법:
 //   export NOMAD_VAR_user=$USER
-//   nomad job run script/g1_hist_ablation.nomad
+//   nomad job run script/train/g1_hist_ablation.nomad
 //   nomad job run -var node_pool=rtx-gpu -var image=161.122.114.87:5000/hvlab:v0-amd64 \
-//     script/g1_hist_ablation.nomad
+//     script/train/g1_hist_ablation.nomad
 //   // 6개 전부에 공통 override 추가 (예: command curriculum):
-//   nomad job run -var 'extra_args=["env=locomotion_cmd_curriculum"]' script/g1_hist_ablation.nomad
+//   nomad job run -var 'extra_args=["env=locomotion_cmd_curriculum"]' script/train/g1_hist_ablation.nomad
 //   // wandb 로깅: 키를 넘기면 6개 전부에 +opt=wandb 가 자동으로 붙는다 (미지정 시 TB only)
 //   export NOMAD_VAR_wandb_api_key=<https://wandb.ai/authorize 에서 발급>
-//   nomad job run script/g1_hist_ablation.nomad
+//   nomad job run script/train/g1_hist_ablation.nomad
 //   // 체크포인트 자동 승계: 모든 그룹에 auto_load_latest=True 기본 — 같은 experiment
 //   //   (project/experiment_name/robot 동일)의 이전 run dir 에서 최신 model_*.pt 를 찾아
 //   //   이어 학습한다 (노드 전원 차단 후 재시작 대비). 리워드/설정을 바꿔 처음부터
 //   //   돌리려면 experiment_name 을 바꾸거나:
-//   nomad job run -var 'extra_args=["auto_load_latest=False"]' script/g1_hist_ablation.nomad
+//   nomad job run -var 'extra_args=["auto_load_latest=False"]' script/train/g1_hist_ablation.nomad
 //
 // 비교 설계 노트:
 //   - project_name 을 하나(G1_hist_ablation)로 묶어 TB 에서 6개 run 을 한 화면에 비교
@@ -70,7 +70,7 @@ variable "extra_args" {
 }
 
 // 제출 시점에 특정 그룹만 비활성화 (count=0 처리, 주석처리 불필요):
-//   nomad job run -var 'disabled_groups=["hist-v1","hist-v4"]' script/g1_hist_ablation.nomad
+//   nomad job run -var 'disabled_groups=["hist-v1","hist-v4"]' script/train/g1_hist_ablation.nomad
 // 이미 돌고 있는 잡은 파일 수정 없이: nomad job scale g1-hist-ablation <group> 0
 variable "disabled_groups" {
   type    = list(string)

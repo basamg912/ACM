@@ -15,7 +15,7 @@ eval_obs_corruption.py 가 관측 전체에 노이즈를 더하는 실험이라�
 결정론적이라 두 경로가 항상 같은 값을 본다.
 
 사용 예:
-  python humanoidverse/eval_joint_dropout.py \
+  python script/eval/eval_joint_dropout.py \
     +checkpoint=ckpt/hist_ablation/rew1/baseline/model_61000.pt +simulator=isaacsim \
     ++headless=True ++vx=0.5 ++envs_per_cond=24
 """
@@ -25,6 +25,12 @@ import os
 import sys
 from pathlib import Path
 
+ACM_ROOT = Path(__file__).resolve().parents[2]
+ASAP_ROOT = ACM_ROOT / "ASAP"
+for repo_path in (ACM_ROOT, ASAP_ROOT):
+    if str(repo_path) not in sys.path:
+        sys.path.insert(0, str(repo_path))
+
 import hydra
 from hydra.core.hydra_config import HydraConfig
 from hydra.utils import instantiate
@@ -33,7 +39,8 @@ from omegaconf import OmegaConf, open_dict
 
 from humanoidverse.utils.config_utils import *  # noqa: E402, F403
 from humanoidverse.utils.logging import HydraLoggerBridge
-from humanoidverse.eval_obs_corruption import run  # 동일한 롤아웃/집계 루프
+from script.eval.eval_obs_corruption import run  # 동일한 롤아웃/집계 루프
+from script.result_paths import checkpoint_result_path
 
 DOF = ["L_hip_pitch", "L_hip_roll", "L_hip_yaw", "L_knee", "L_ankle_pitch", "L_ankle_roll",
        "R_hip_pitch", "R_hip_roll", "R_hip_yaw", "R_knee", "R_ankle_pitch", "R_ankle_roll",
@@ -106,7 +113,7 @@ def install_dropout(torch, num_envs, device, conds, env_cond):
     return state
 
 
-@hydra.main(config_path="config", config_name="base_eval")
+@hydra.main(config_path="../../ASAP/humanoidverse/config", config_name="base_eval")
 def main(override_config: OmegaConf):
     hydra_log_path = os.path.join(HydraConfig.get().runtime.output_dir, "dropout.log")
     logger.remove()
@@ -114,7 +121,7 @@ def main(override_config: OmegaConf):
     logger.add(sys.stdout, level=os.environ.get("LOGURU_LEVEL", "INFO").upper(), colorize=True)
     logging.basicConfig(level=logging.INFO)
     logging.getLogger().addHandler(HydraLoggerBridge())
-    os.chdir(hydra.utils.get_original_cwd())
+    os.chdir(ASAP_ROOT)
 
     assert override_config.checkpoint is not None, "+checkpoint=<path/model_X.pt> 가 필요합니다"
     checkpoint = Path(override_config.checkpoint)
@@ -195,7 +202,10 @@ def main(override_config: OmegaConf):
                      res["act_rate"][m].mean()))
 
     out_path = config.get("out", None)
-    out_path = Path(out_path) if out_path else checkpoint.parent / "corruption" / "dropout.npz"
+    out_path = Path(out_path) if out_path else checkpoint_result_path(
+        checkpoint, "joint_dropout", "dropout.npz",
+        results_root=config.get("results_root", None),
+    )
     out_path.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(
         out_path, env_cond=idx, cmd_vx=np.float32(cfg["vx"]),
@@ -210,4 +220,5 @@ def main(override_config: OmegaConf):
 
 
 if __name__ == "__main__":
+    os.chdir(ASAP_ROOT)
     main()

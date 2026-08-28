@@ -1,11 +1,13 @@
 #!/bin/bash
 # 0-07_ 로 시작하는 모션 12개를 각각 하나의 policy 학습 job 으로 dispatch
-# 사용: bash script/dispatch_motions.sh
+# 사용: bash script/train/dispatch_motions.sh
 # - -detach: 배치 대기 없이 등록만 (노드가 꽉 차 있어도 pending 으로 큐잉됨)
 # - 이미 pending/running 인 모션은 건너뜀 (재실행 안전)
 set -u
 
-MOTION_DIR="$(dirname "$0")/../motionData"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+ACM_ROOT="$(cd -- "${SCRIPT_DIR}/../.." && pwd)"
+MOTION_DIR="${ACM_ROOT}/motionData"
 
 # 현재 살아있는(dead 아닌) dispatch 들의 motion 목록
 active_motions=$(

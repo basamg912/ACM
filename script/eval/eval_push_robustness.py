@@ -21,7 +21,7 @@ push_by_setting_velocity 방식의 '더하기').
     (회복 궤적 시각화용).
 
 사용 예:
-python humanoidverse/eval_push_robustness.py \
+python script/eval/eval_push_robustness.py \
 +checkpoint=ckpt/hist_ablation/cur/baseline/model_10000.pt +simulator=isaacsim \
 ++headless=True ++vx=0.5 ++envs_per_cond=20
 """
@@ -31,6 +31,12 @@ import os
 import sys
 from pathlib import Path
 
+ACM_ROOT = Path(__file__).resolve().parents[2]
+ASAP_ROOT = ACM_ROOT / "ASAP"
+for repo_path in (ACM_ROOT, ASAP_ROOT):
+    if str(repo_path) not in sys.path:
+        sys.path.insert(0, str(repo_path))
+
 import hydra
 from hydra.core.hydra_config import HydraConfig
 from hydra.utils import instantiate
@@ -39,6 +45,7 @@ from omegaconf import OmegaConf, open_dict
 import math
 from humanoidverse.utils.config_utils import *  # noqa: E402, F403
 from humanoidverse.utils.logging import HydraLoggerBridge
+from script.result_paths import checkpoint_result_path
 
 sqrt_two = math.sqrt(2)
 # heading(yaw) 프레임 Δv. left = 로봇 기준 왼쪽(+y).
@@ -61,7 +68,7 @@ def build_conditions():
     return conds
 
 
-@hydra.main(config_path="config", config_name="base_eval")
+@hydra.main(config_path="../../ASAP/humanoidverse/config", config_name="base_eval")
 def main(override_config: OmegaConf):
     hydra_log_path = os.path.join(HydraConfig.get().runtime.output_dir, "push.log")
     logger.remove()
@@ -69,7 +76,7 @@ def main(override_config: OmegaConf):
     logger.add(sys.stdout, level=os.environ.get("LOGURU_LEVEL", "INFO").upper(), colorize=True)
     logging.basicConfig(level=logging.INFO)
     logging.getLogger().addHandler(HydraLoggerBridge())
-    os.chdir(hydra.utils.get_original_cwd())
+    os.chdir(ASAP_ROOT)
 
     assert override_config.checkpoint is not None, "+checkpoint=<path/model_X.pt> 가 필요합니다"
     checkpoint = Path(override_config.checkpoint)
@@ -272,7 +279,10 @@ def main(override_config: OmegaConf):
                      np.abs(vy_m[m]).mean(), np.abs(wz_m[m]).mean()))
 
     out_path = config.get("out", None)
-    out_path = Path(out_path) if out_path else checkpoint.parent / "perturb" / "push.npz"
+    out_path = Path(out_path) if out_path else checkpoint_result_path(
+        checkpoint, "push_robustness", "push.npz",
+        results_root=config.get("results_root", None),
+    )
     out_path.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(
         out_path, env_cond=idx, cmd_vx=np.float32(cfg_vx),
@@ -290,4 +300,5 @@ def main(override_config: OmegaConf):
 
 
 if __name__ == "__main__":
+    os.chdir(ASAP_ROOT)
     main()

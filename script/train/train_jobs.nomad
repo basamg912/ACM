@@ -1,7 +1,7 @@
 // Nomad job: locomotion + motion tracking 학습을 동시에 실행
 // 사용법:
-//   nomad job run script/train_jobs.nomad
-//   nomad job run -var node_pool=rtx-gpu -var image=161.122.114.87:5000/hvlab:v0-amd64 script/train_jobs.nomad
+//   nomad job run script/train/train_jobs.nomad
+//   nomad job run -var node_pool=rtx-gpu -var image=161.122.114.87:5000/hvlab:v0-amd64 script/train/train_jobs.nomad
 // 전제:
 //   - 이미지 hvlab:v0 가 노드에 빌드되어 있음 (docker compose build)
 //   - Nomad docker 드라이버에서 volumes 허용 필요 (client 설정):
@@ -37,7 +37,7 @@ job "kapex-train" {
   }
 
   // ---------------------------------------------------------------
-  // Job 1: locomotion (script/locomotion.md)
+  // Job 1: locomotion (docs/locomotion.md)
   // ---------------------------------------------------------------
   group "locomotion" {
     count = 1
@@ -106,7 +106,7 @@ job "kapex-train" {
   }
 
   // ---------------------------------------------------------------
-  // Job 2: motion tracking (script/motion_tracking.md)
+  // Job 2: motion tracking (docs/motion_tracking.md)
   // ---------------------------------------------------------------
   group "motion-tracking" {
     count = 1

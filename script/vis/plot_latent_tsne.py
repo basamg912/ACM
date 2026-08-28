@@ -1,8 +1,8 @@
 """
 collect_encoder_latents.py 가 저장한 npz 를 t-SNE 로 시각화한다.
 
-  python scripts/plot_latent_tsne.py logs/.../latents/latents_ckpt_100.npz
-  python scripts/plot_latent_tsne.py <npz> --color phase --max-samples 8000
+  python script/vis/plot_latent_tsne.py results/eval/latents/<run>/<checkpoint>/latents_ckpt_100.npz
+  python script/vis/plot_latent_tsne.py <npz> --color phase --max-samples 8000
 
 --color:
   command : 배정된 커맨드 격자 라벨로 색칠 (기본) — latent 가 커맨드를 구분하는지
@@ -10,9 +10,16 @@ collect_encoder_latents.py 가 저장한 npz 를 t-SNE 로 시각화한다.
   phase : gait 위상 — latent 가 커맨드 대신 위상만 인코딩하는지 확인용
 """
 import argparse
+import sys
 from pathlib import Path
 
+ACM_ROOT = Path(__file__).resolve().parents[2]
+if str(ACM_ROOT) not in sys.path:
+    sys.path.insert(0, str(ACM_ROOT))
+
 import numpy as np
+
+from script.result_paths import plot_result_path
 
 
 def main():
@@ -25,6 +32,7 @@ def main():
     ap.add_argument("--drop-after-reset", type=int, default=10,
                     help="리셋 직후 N 스텝은 과도 상태라 제외")
     ap.add_argument("--out", type=Path, default=None)
+    ap.add_argument("--results-root", type=Path, default=None)
     args = ap.parse_args()
 
     import matplotlib
@@ -75,7 +83,13 @@ def main():
 
     ax.set_title(f"history encoder latent t-SNE — colored by {args.color}\n{args.npz.name}")
     ax.set_xticks([]); ax.set_yticks([])
-    out = args.out or args.npz.with_name(f"{args.npz.stem}_tsne_{args.color}.png")
+    out = args.out or plot_result_path(
+        args.npz,
+        "latent_tsne",
+        f"{args.npz.stem}_tsne_{args.color}.png",
+        results_root=args.results_root,
+    )
+    out.parent.mkdir(parents=True, exist_ok=True)
     fig.tight_layout(); fig.savefig(out, dpi=150)
     print(f"저장: {out}")
 

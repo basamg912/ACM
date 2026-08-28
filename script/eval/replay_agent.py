@@ -2,7 +2,7 @@
 deploy_agent.py 로 수집한 rollout 의 action 만을 source simulator(isaaclab/isaacsim)에서
 open-loop 으로 재생하여 궤적 재현 가능성을 검증한다. 정책(algo)은 로드하지 않는다.
 
-    python humanoidverse/replay_agent.py +simulator=isaacsim \
+    python script/eval/replay_agent.py +simulator=isaacsim \
         +replay_data=motionData/locomotion_run0.pt headless=True save_video=True
 
 +replay_data 는 파일 하나, 콤마로 구분된 목록, 또는 디렉토리(locomotion_*.pt 전부).
@@ -28,15 +28,20 @@ import os
 import sys
 from pathlib import Path
 
+ACM_ROOT = Path(__file__).resolve().parents[2]
+ASAP_ROOT = ACM_ROOT / "ASAP"
+for repo_path in (ACM_ROOT, ASAP_ROOT):
+    if str(repo_path) not in sys.path:
+        sys.path.insert(0, str(repo_path))
+
 import hydra
 from hydra.core.hydra_config import HydraConfig
 from hydra.utils import instantiate
 from loguru import logger
 from omegaconf import OmegaConf
-from utils.config_utils import *  # noqa: E402, F403
-
 from humanoidverse.utils.config_utils import *  # noqa: E402, F403
 from humanoidverse.utils.logging import HydraLoggerBridge
+from script.result_paths import checkpoint_result_dir
 
 
 def build_obs_slice_map(obs_config, group):
@@ -117,7 +122,7 @@ def reconstruct_step1_state(data, config, device):
     return root_states, dof_states
 
 
-@hydra.main(config_path="config", config_name="base_eval")
+@hydra.main(config_path="../../ASAP/humanoidverse/config", config_name="base_eval")
 def main(override_config: OmegaConf):
     hydra_log_path = os.path.join(HydraConfig.get().runtime.output_dir, "replay.log")
     logger.remove()
@@ -126,7 +131,7 @@ def main(override_config: OmegaConf):
     logger.add(sys.stdout, level=console_log_level, colorize=True)
     logging.basicConfig(level=logging.DEBUG)
     logging.getLogger().addHandler(HydraLoggerBridge())
-    os.chdir(hydra.utils.get_original_cwd())
+    os.chdir(ASAP_ROOT)
 
     if override_config.get("replay_data", None) is None:
         raise ValueError(
@@ -166,7 +171,7 @@ def main(override_config: OmegaConf):
 
     import torch  # noqa: E402
     from humanoidverse.utils.helpers import pre_process_config
-    from utils.replay_compare import compare_and_report  # script-dir import (deploy_agent 와 동일 방식)
+    from humanoidverse.utils.replay_compare import compare_and_report
 
     first_data = torch.load(replay_files[0], map_location="cpu", weights_only=False)
     checkpoint = Path(override_config.get("checkpoint", None) or first_data["checkpoint"])
@@ -188,18 +193,27 @@ def main(override_config: OmegaConf):
     device = config.get("device", None) or ("cuda:0" if torch.cuda.is_available() else "cpu")
     init_from_data = bool(config.get("init_from_data", True))
     save_video = bool(config.get("save_video", False))
-    save_dir = Path(config.get("collect_save_dir", replay_files[0].parent))
+    configured_save_dir = config.get("collect_save_dir", None)
+    save_dir = (
+        Path(configured_save_dir)
+        if configured_save_dir
+        else checkpoint_result_dir(
+            checkpoint,
+            "replay",
+            results_root=config.get("results_root", None),
+            timestamp=config.get("eval_timestamp", None),
+        )
+    )
     save_dir.mkdir(parents=True, exist_ok=True)
 
-    eval_log_dir = Path(config.eval_log_dir)
+    eval_log_dir = save_dir
     eval_log_dir.mkdir(parents=True, exist_ok=True)
+    logger.add(eval_log_dir / "replay.log", level="DEBUG")
     logger.info(f"Saving replay logs to {eval_log_dir}")
     with open(eval_log_dir / "config.yaml", "w") as file:
         OmegaConf.save(config, file)
 
-    config.env.config.save_rendering_dir = str(
-        checkpoint.parent / "renderings" / "replay"
-    )
+    config.env.config.save_rendering_dir = str(save_dir / "renderings")
     config.env.config.ckpt_dir = str(checkpoint.parent)
     env = instantiate(config.env, device=device)
     env.set_is_evaluating()
@@ -338,4 +352,5 @@ def main(override_config: OmegaConf):
 
 
 if __name__ == "__main__":
+    os.chdir(ASAP_ROOT)
     main()

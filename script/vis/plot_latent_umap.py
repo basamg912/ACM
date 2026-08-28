@@ -1,9 +1,9 @@
 """Visualize history-encoder latent NPZ files with UMAP.
 
 Examples:
-  python scripts/plot_latent_umap.py logs/.../latents/latents_ckpt_30000.npz
-  python scripts/plot_latent_umap.py <npz> --color phase --max-samples 12000
-  python scripts/plot_latent_umap.py <npz> --n-neighbors 50 --min-dist 0.05
+  python script/vis/plot_latent_umap.py results/eval/latents/<run>/<checkpoint>/latents_ckpt_30000.npz
+  python script/vis/plot_latent_umap.py <npz> --color phase --max-samples 12000
+  python script/vis/plot_latent_umap.py <npz> --n-neighbors 50 --min-dist 0.05
 
 Colors:
   command : assigned command-grid label (default)
@@ -14,9 +14,16 @@ Dependency:
   pip install umap-learn
 """
 import argparse
+import sys
 from pathlib import Path
 
+ACM_ROOT = Path(__file__).resolve().parents[2]
+if str(ACM_ROOT) not in sys.path:
+    sys.path.insert(0, str(ACM_ROOT))
+
 import numpy as np
+
+from script.result_paths import plot_result_path
 
 
 COLORS = ("command", "vx", "vy", "wz", "phase")
@@ -181,8 +188,12 @@ def plot_embedding(embedding, samples, args, n_neighbors):
     for spine in axis.spines.values():
         spine.set_visible(False)
 
-    output = args.out or args.npz.with_name(
-        f"{args.npz.stem}_umap_{args.color}.png")
+    output = args.out or plot_result_path(
+        args.npz,
+        "latent_umap",
+        f"{args.npz.stem}_umap_{args.color}.png",
+        results_root=args.results_root,
+    )
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.tight_layout()
     fig.savefig(output, dpi=args.dpi)
@@ -207,6 +218,7 @@ def make_parser():
     parser.add_argument("--dpi", type=int, default=180)
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--out", type=Path)
+    parser.add_argument("--results-root", type=Path)
     return parser
 
 

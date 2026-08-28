@@ -20,7 +20,7 @@ Lp / (Lp + 1 - p) 이다. 원하는 duty d 를 맞추려면 p = d / (L(1-d) + d)
   뽑아 캐시). 실제 센서에 더 가깝고, 그쪽 실험에 있던 이중 추출 문제가 없다.
 
 사용 예:
-  python humanoidverse/eval_intermittent_noise.py \
+  python script/eval/eval_intermittent_noise.py \
     +checkpoint=ckpt/hist_ablation/rew1/baseline/model_61000.pt +simulator=isaacsim \
     ++headless=True ++vx=0.5 ++envs_per_cond=32
 """
@@ -30,6 +30,12 @@ import os
 import sys
 from pathlib import Path
 
+ACM_ROOT = Path(__file__).resolve().parents[2]
+ASAP_ROOT = ACM_ROOT / "ASAP"
+for repo_path in (ACM_ROOT, ASAP_ROOT):
+    if str(repo_path) not in sys.path:
+        sys.path.insert(0, str(repo_path))
+
 import hydra
 from hydra.core.hydra_config import HydraConfig
 from hydra.utils import instantiate
@@ -38,7 +44,8 @@ from omegaconf import OmegaConf, open_dict
 
 from humanoidverse.utils.config_utils import *  # noqa: E402, F403
 from humanoidverse.utils.logging import HydraLoggerBridge
-from humanoidverse.eval_obs_corruption import TARGETS, measured_sigma, run
+from script.eval.eval_obs_corruption import TARGETS, measured_sigma, run
+from script.result_paths import checkpoint_result_path
 
 DUTIES = [0.02, 0.05, 0.2, 0.5, 1.0]
 BURSTS = [1, 5, 20]
@@ -108,7 +115,7 @@ def install_intermittent(torch, num_envs, device, sigma, conds, env_cond):
     return state, timer, stats
 
 
-@hydra.main(config_path="config", config_name="base_eval")
+@hydra.main(config_path="../../ASAP/humanoidverse/config", config_name="base_eval")
 def main(override_config: OmegaConf):
     hydra_log_path = os.path.join(HydraConfig.get().runtime.output_dir, "intermittent.log")
     logger.remove()
@@ -116,7 +123,7 @@ def main(override_config: OmegaConf):
     logger.add(sys.stdout, level=os.environ.get("LOGURU_LEVEL", "INFO").upper(), colorize=True)
     logging.basicConfig(level=logging.INFO)
     logging.getLogger().addHandler(HydraLoggerBridge())
-    os.chdir(hydra.utils.get_original_cwd())
+    os.chdir(ASAP_ROOT)
 
     assert override_config.checkpoint is not None, "+checkpoint=<path/model_X.pt> 가 필요합니다"
     checkpoint = Path(override_config.checkpoint)
@@ -171,7 +178,9 @@ def main(override_config: OmegaConf):
                            npz_path=config.get("sigma_npz", None),
                            actor_obs_keys=config.env.config.obs.obs_dict.actor_obs,
                            obs_dims=config.env.config.obs.obs_dims,
-                           obs_auxiliary=config.env.config.obs.obs_auxiliary)
+                           obs_auxiliary=config.env.config.obs.obs_auxiliary,
+                           checkpoint=checkpoint,
+                           results_root=config.get("results_root", None))
     logger.info("실측 sigma (물리 단위): " + ", ".join(f"{k}={v:.3f}" for k, v in sigma.items()))
 
     env = instantiate(config.env, device=device)
@@ -217,7 +226,10 @@ def main(override_config: OmegaConf):
                      res["act_rate"][m].mean(), duty_actual[m].mean()))
 
     out_path = config.get("out", None)
-    out_path = Path(out_path) if out_path else checkpoint.parent / "corruption" / "intermittent.npz"
+    out_path = Path(out_path) if out_path else checkpoint_result_path(
+        checkpoint, "intermittent_noise", "intermittent.npz",
+        results_root=config.get("results_root", None),
+    )
     out_path.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(
         out_path, env_cond=idx, cmd_vx=np.float32(cfg["vx"]),
@@ -233,4 +245,5 @@ def main(override_config: OmegaConf):
 
 
 if __name__ == "__main__":
+    os.chdir(ASAP_ROOT)
     main()

@@ -7,3 +7,12 @@ ckpt
 !.omc/skills/
 !.omc/skills/**
 .DS_Store
+
+# Generated evaluation arrays, videos, exports, and plots.
+results/**
+!results/**/
+!results/README.md
+!results/**/.gitkeep
+
+**/__pycache__/**
+**/logs_eval/**

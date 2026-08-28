@@ -1,1 +1,1 @@
-python humanoidverse/eval_agent.py +simulator=mujoco +checkpoint=/home/kist/work/workspace/ACM/ASAP/logs/MotionTracking/20260713_154838-MotionTracking_Kapex_walking-motion_tracking-KAPEX_wo_hand_head/model_41300.pt +num_envs=1 +robot.asset.xml_file=kapex/kapex_play.xml
+python script/eval/eval_agent.py +simulator=mujoco +checkpoint=/home/kist/work/workspace/ACM/ASAP/logs/MotionTracking/20260713_154838-MotionTracking_Kapex_walking-motion_tracking-KAPEX_wo_hand_head/model_41300.pt +num_envs=1 +robot.asset.xml_file=kapex/kapex_play.xml

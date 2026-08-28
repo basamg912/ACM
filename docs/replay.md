@@ -4,18 +4,17 @@ mujoco deploy 로 수집한 rollout(motionData/*.pt)의 action 만을 isaaclab(i
 open-loop 재생하여, 수집 궤적(qpos)이 source simulator 에서 재현되는지 검증한다.
 정책은 로드하지 않는다. 산출물: <stem>_replay_isaacsim.{pt} + _compare.{json,png,mp4}
 
-# 실행 환경: hvlab + isaac sim 바이너리 (train_agent.py isaacsim 학습과 동일)
+# 실행 환경: hvlab + Isaac Sim (train_agent.py isaacsim 학습과 동일)
 conda activate hvlab
-source /home/kist/work/workspace/ASAP/IsaacLab/_isaac_sim/setup_conda_env.sh
 
-# 단일 rollout replay (ASAP 루트에서)
-MUJOCO_GL=egl python humanoidverse/replay_agent.py \
+# 단일 rollout replay (ACM root에서)
+MUJOCO_GL=egl python script/eval/replay_agent.py \
   +simulator=isaacsim \
   +replay_data=motionData/locomotion_run0.pt \
   headless=True save_video=True
 
 # 디렉토리 전체 (locomotion_*.pt 순회, isaacsim 세션 1회 재사용)
-MUJOCO_GL=egl python humanoidverse/replay_agent.py \
+MUJOCO_GL=egl python script/eval/replay_agent.py \
   +simulator=isaacsim +replay_data=motionData headless=True save_video=True
 
 # 옵션
@@ -31,5 +30,5 @@ MUJOCO_GL=egl python humanoidverse/replay_agent.py \
 #   _post_config_observation_callback 의 sorted() 순서.
 
 # 비교만 다시 실행 (isaacsim 불필요, hvgym 등에서)
-python humanoidverse/utils/replay_compare.py \
-  motionData/locomotion_run0.pt motionData/locomotion_run0_replay_isaacsim.pt
+python ASAP/humanoidverse/utils/replay_compare.py \
+  ASAP/motionData/locomotion_run0.pt ASAP/motionData/locomotion_run0_replay_isaacsim.pt

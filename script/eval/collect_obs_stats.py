@@ -13,7 +13,7 @@ encoder 출력이 아니라 **정책이 실제로 보는 obs** 를 저장한다.
 낙상은 done & ~time_out 으로 센다 (에피소드 시간초과와 구분).
 
 사용 예:
-  python humanoidverse/collect_obs_stats.py \
+  python script/eval/collect_obs_stats.py \
     +checkpoint=logs/.../model_100.pt +simulator=isaacsim \
     ++num_envs=120 ++warmup_steps=300 ++record_steps=600 ++stride=3
 """
@@ -24,6 +24,12 @@ import os
 import sys
 from pathlib import Path
 
+ACM_ROOT = Path(__file__).resolve().parents[2]
+ASAP_ROOT = ACM_ROOT / "ASAP"
+for repo_path in (ACM_ROOT, ASAP_ROOT):
+    if str(repo_path) not in sys.path:
+        sys.path.insert(0, str(repo_path))
+
 import hydra
 from hydra.core.hydra_config import HydraConfig
 from hydra.utils import instantiate
@@ -32,9 +38,10 @@ from omegaconf import OmegaConf
 
 from humanoidverse.utils.config_utils import *  # noqa: E402, F403
 from humanoidverse.utils.logging import HydraLoggerBridge
+from script.result_paths import checkpoint_result_path
 
 # collect_encoder_latents.py 와 동일한 헬퍼 (커맨드 배정 / eval 범위 확장 / 라벨)
-from humanoidverse.collect_encoder_latents import (  # noqa: E402
+from script.eval.collect_encoder_latents import (  # noqa: E402
     assign_commands,
     apply_yaw_rate_command,
     command_label,
@@ -147,7 +154,7 @@ def collect(env, algo, torch, num_warmup, num_record, stride, cmd_grid, device):
     return out
 
 
-@hydra.main(config_path="config", config_name="base_eval")
+@hydra.main(config_path="../../ASAP/humanoidverse/config", config_name="base_eval")
 def main(override_config: OmegaConf):
     hydra_log_path = os.path.join(HydraConfig.get().runtime.output_dir, "collect_obs.log")
     logger.remove()
@@ -155,7 +162,7 @@ def main(override_config: OmegaConf):
     logger.add(sys.stdout, level=os.environ.get("LOGURU_LEVEL", "INFO").upper(), colorize=True)
     logging.basicConfig(level=logging.INFO)
     logging.getLogger().addHandler(HydraLoggerBridge())
-    os.chdir(hydra.utils.get_original_cwd())
+    os.chdir(ASAP_ROOT)
 
     assert override_config.checkpoint is not None, "+checkpoint=<path/model_X.pt> 가 필요합니다"
     checkpoint = Path(override_config.checkpoint)
@@ -221,7 +228,10 @@ def main(override_config: OmegaConf):
 
     ckpt_num = checkpoint.stem.split("_")[-1]
     out_path = config.get("out", None)
-    out_path = Path(out_path) if out_path else checkpoint.parent / "obs_stats" / f"obs_ckpt_{ckpt_num}.npz"
+    out_path = Path(out_path) if out_path else checkpoint_result_path(
+        checkpoint, "obs_stats", f"obs_ckpt_{ckpt_num}.npz",
+        results_root=config.get("results_root", None),
+    )
     out_path.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(out_path, **data)
 
@@ -235,4 +245,5 @@ def main(override_config: OmegaConf):
 
 
 if __name__ == "__main__":
+    os.chdir(ASAP_ROOT)
     main()

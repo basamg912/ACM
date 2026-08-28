@@ -17,7 +17,7 @@ eval_agent.py 와 같은 방식으로 체크포인트/시뮬레이터를 띄우�
     (eval 모드에서 z = mu, vel head 없음)
 
 사용 예:
-  python humanoidverse/collect_encoder_latents.py \
+  python script/eval/collect_encoder_latents.py \
     +checkpoint=logs/.../model_100.pt +simulator=isaacsim \
     +num_envs=64 +warmup_steps=300 +record_steps=600
 
@@ -30,6 +30,12 @@ import os
 import sys
 from pathlib import Path
 
+ACM_ROOT = Path(__file__).resolve().parents[2]
+ASAP_ROOT = ACM_ROOT / "ASAP"
+for repo_path in (ACM_ROOT, ASAP_ROOT):
+    if str(repo_path) not in sys.path:
+        sys.path.insert(0, str(repo_path))
+
 import hydra
 from hydra.core.hydra_config import HydraConfig
 from hydra.utils import instantiate
@@ -38,6 +44,7 @@ from omegaconf import OmegaConf
 
 from humanoidverse.utils.config_utils import *  # noqa: E402, F403
 from humanoidverse.utils.logging import HydraLoggerBridge
+from script.result_paths import checkpoint_result_path
 
 # (vx, vy, wz) — 기본 격자. 정지/전후/좌우/회전/대각을 고루 덮는다.
 # DEFAULT_COMMANDS = [
@@ -175,7 +182,7 @@ def collect(env, algo, torch, num_warmup, num_record, cmd_grid, device):
     return out
 
 
-@hydra.main(config_path="config", config_name="base_eval")
+@hydra.main(config_path="../../ASAP/humanoidverse/config", config_name="base_eval")
 def main(override_config: OmegaConf):
     hydra_log_path = os.path.join(HydraConfig.get().runtime.output_dir, "collect.log")
     logger.remove()
@@ -183,7 +190,7 @@ def main(override_config: OmegaConf):
     logger.add(sys.stdout, level=os.environ.get("LOGURU_LEVEL", "INFO").upper(), colorize=True)
     logging.basicConfig(level=logging.INFO)
     logging.getLogger().addHandler(HydraLoggerBridge())
-    os.chdir(hydra.utils.get_original_cwd())
+    os.chdir(ASAP_ROOT)
 
     # ---- 체크포인트 옆 config.yaml 로 학습 설정 복원 (eval_agent.py 와 동일) ----
     assert override_config.checkpoint is not None, "+checkpoint=<path/model_X.pt> 가 필요합니다"
@@ -249,7 +256,10 @@ def main(override_config: OmegaConf):
 
     ckpt_num = checkpoint.stem.split("_")[-1]
     out_path = config.get("out", None)
-    out_path = Path(out_path) if out_path else checkpoint.parent / "latents" / f"latents_ckpt_{ckpt_num}.npz"
+    out_path = Path(out_path) if out_path else checkpoint_result_path(
+        checkpoint, "latents", f"latents_ckpt_{ckpt_num}.npz",
+        results_root=config.get("results_root", None),
+    )
     out_path.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(out_path, **data)
 
@@ -267,4 +277,5 @@ def main(override_config: OmegaConf):
 
 
 if __name__ == "__main__":
+    os.chdir(ASAP_ROOT)
     main()
