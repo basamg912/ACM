@@ -123,4 +123,5 @@ History encoder 가 실제로 이득이 있는지 확인하기 위한 평가 스
 ## 지원 로봇
 
 - G1 (29dof / anneal 23dof)
+- K1 (23dof / anneal 21dof)
 - ~~KAPEX(31dof)~~
